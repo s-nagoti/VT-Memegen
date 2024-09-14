@@ -3,31 +3,43 @@ import Register from '../../Pages/Register/Register'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { useAuth } from '../../Contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
+import Header from '../Header/Header'
+import PostGallery from '../PostGallery/PostGallery'
+import PostDetailPage from '../../Pages/PostDetailPage/PostDetailPage'
 import './App.css'
 
 function App() {
 
-  const { logout } = useAuth()
+
+  const handleHomeClick = () => {
+    console.log('Home button clicked');
+    // Navigate or perform other actions
+  };
+
+  const handleProfileClick = () => {
+    console.log('Profile button clicked');
+    // Navigate or perform other actions
+  };
+
+  const handleCreatePostClick = () => {
+    navigate('/add-post')
+  };
+
+
+  const { currentUser } = useAuth()
   const navigate = useNavigate()
 
-  const handleLogout = async () => {
-    try {
-      await logout()
-      navigate('/login')
-    } catch (err) {
-      console.error('Failed to logout', err)
-    }
-  }
-
   return (
-    <>
-    You are logged in!
-
     <div>
-    <p>Want to logout?</p>
-    <button onClick={handleLogout}>Logout</button>
+      <Header   
+        title="VT Memegen"
+        email={currentUser?.email ?? ""}
+        onHomeClick={handleHomeClick}
+        onProfileClick={handleProfileClick}
+        onCreatePostClick={handleCreatePostClick}
+        />
+        <PostGallery />
     </div>
-    </>
   )
 }
 
