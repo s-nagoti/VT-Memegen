@@ -7,6 +7,7 @@ interface HeaderProps {
   onHomeClick?: () => void;
   onProfileClick?: () => void;
   onCreatePostClick?: () => void;
+  showCreatePost?: boolean;
 }
 
 const Header = ({
@@ -15,6 +16,7 @@ const Header = ({
   onHomeClick,
   onProfileClick,
   onCreatePostClick,
+  showCreatePost,
 }: HeaderProps) => {
   // Extract the username from the email
   const username = email ? email.split('@')[0] : 'Profile';
@@ -52,12 +54,14 @@ const Header = ({
             </svg>
           </button>
         </div>
+        { showCreatePost &&
         <button
           className="px-4 py-2 font-medium text-white bg-red-600 hover:bg-red-700 rounded"
           onClick={onCreatePostClick}
         >
           Create Post
         </button>
+        }
        
       </div>
     </header>

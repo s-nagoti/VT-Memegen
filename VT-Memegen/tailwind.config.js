@@ -5,8 +5,15 @@ export default {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        maroon: {
+          DEFAULT: '#800000', // Define the maroon color
+          dark: '#4B0000',
+          light: '#B03060',
+      }
+    },
   },
   plugins: [],
 }
-
+}

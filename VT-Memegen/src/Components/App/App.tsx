@@ -12,17 +12,17 @@ function App() {
 
 
   const handleHomeClick = () => {
-    console.log('Home button clicked');
-    // Navigate or perform other actions
+    navigate('/')
   };
 
   const handleProfileClick = () => {
-    console.log('Profile button clicked');
+    navigate('/profile-page')
     // Navigate or perform other actions
   };
 
   const handleCreatePostClick = () => {
     navigate('/add-post')
+    // Navigate or perform other actions
   };
 
 
@@ -33,10 +33,11 @@ function App() {
     <div>
       <Header   
         title="VT Memegen"
-        email={currentUser?.email ?? ""}
+        email={currentUser?.email ?? "unknown"}
         onHomeClick={handleHomeClick}
         onProfileClick={handleProfileClick}
         onCreatePostClick={handleCreatePostClick}
+        showCreatePost={true}
         />
         <PostGallery />
     </div>
