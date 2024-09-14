@@ -5,6 +5,8 @@ import Register from "../../Pages/Register/Register";
 import Login from "../../Pages/Login/Login";
 import Logout from "../../Pages/Logout/Logout";
 import EmailConfirmation from "../../Pages/EmailConfirmation/EmailConfirmation";
+import AddPost from "../../Pages/AddPost/AddPost";
+import PostDetailPage from "../../Pages/PostDetailPage/PostDetailPage";
 import { useAuth } from '../../Contexts/AuthContext';
 
 function AuthWrapper() {
@@ -26,6 +28,8 @@ function AuthWrapper() {
         ) : (
           <Route path="/email-confirmation" element={<EmailConfirmation/>} />
         )}
+        <Route path="/add-post" element={<AddPost />} />
+        <Route path="/posts/:postId" element={<PostDetailPage />} />
       </Routes>
     );
   }
