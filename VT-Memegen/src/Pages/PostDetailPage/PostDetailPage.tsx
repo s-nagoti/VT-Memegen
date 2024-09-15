@@ -7,22 +7,9 @@ import { db } from '../../firebaseConfig';
 import Header from '../../Components/Header/Header';
 import {useAuth} from '../../Contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import {Post} from '../../Models/Post'
+import {Comment} from '../../Models/Comment'
 
-interface Comment {
-  id: string;
-  author: string;
-  text: string;
-  createdAt: any; // Firestore timestamp
-}
-
-interface Post {
-  id: string;
-  imageUrl: string;
-  title: string;
-  description: string;
-  upvotes: number;
-  downvotes: number;
-}
 
 const PostDetailPage: React.FC = () => {
   const { postId } = useParams<{ postId: string }>();
@@ -249,10 +236,10 @@ const PostDetailPage: React.FC = () => {
           ) : (
             comments.map((comment) => (
               <div key={comment.id} className="border-b pb-4">
-                <p className="text-gray-800 font-semibold">{comment.author}</p>
+                <p className="text-gray-800 font-semibold">{comment.author.username}</p>
                 <p className="text-gray-700">{comment.text}</p>
                 <p className="text-sm text-gray-500">
-                  {new Date(comment.createdAt.seconds * 1000).toLocaleString()}
+                  {new Date(comment.createdAt.getSeconds() * 1000).toLocaleString()}
                 </p>
               </div>
             ))
