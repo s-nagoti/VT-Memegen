@@ -7,6 +7,7 @@ import { Post } from '../../Models/Post';
 import { FaThumbsUp, FaTrash, FaSignOutAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { signOut, deleteUser } from 'firebase/auth';
+import Header from '../../Components/Header/Header';
 
 const ProfilePage: React.FC = () => {
   const { user, setUser } = useUser();
@@ -117,6 +118,11 @@ const ProfilePage: React.FC = () => {
 
   return (
     <div className="container mx-auto p-6">
+
+        <Header
+            onHomeClick={() => navigate('/')}
+        />
+
       {/* User Information */}
       <div className="flex flex-col md:flex-row items-center md:items-start md:space-x-6 bg-white shadow-md rounded-lg p-6">
         {/* Profile Picture */}

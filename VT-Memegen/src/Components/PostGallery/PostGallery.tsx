@@ -40,8 +40,8 @@ const PostGallery: React.FC = () => {
             description: data.description,
             imageUrl: data.imageUrl,
             texts: data.texts,
-            upvotes: data.upvotes || 0,
-            downvotes: data.downvotes || 0,
+            upvotes: data.upvotes || [],
+            downvotes: data.downvotes || [],
             createdAt: data.createdAt,
             authorId: data.authorId,
           });
@@ -56,40 +56,6 @@ const PostGallery: React.FC = () => {
 
     fetchPosts();
   }, []);
-
-  /**
-   * Handles upvoting a post.
-   * (Note: This is a placeholder. Implement Firestore update logic as needed.)
-   *
-   * @param postId - The ID of the post to upvote
-   */
-  const handleUpvote = (postId: string) => {
-    // setPosts((prevPosts) =>
-    //   prevPosts.map((post) =>
-    //     post.id === postId
-    //       ? { ...post, upvotes: (post.upvotes || 0) + 1 }
-    //       : post
-    //   )
-    // );
-    // // TODO: Update the upvotes in Firestore
-  };
-
-  /**
-   * Handles downvoting a post.
-   * (Note: This is a placeholder. Implement Firestore update logic as needed.)
-   *
-   * @param postId - The ID of the post to downvote
-   */
-  const handleDownvote = (postId: string) => {
-    // setPosts((prevPosts) =>
-    //   prevPosts.map((post) =>
-    //     post.id === postId
-    //       ? { ...post, downvotes: (post.downvotes || 0) + 1 }
-    //       : post
-    //   )
-    // );
-    // // TODO: Update the downvotes in Firestore
-  };
 
   if (loading) {
     return (
@@ -128,21 +94,19 @@ const PostGallery: React.FC = () => {
                   <div className="flex items-center space-x-4">
                     {/* Upvote Button */}
                     <button
-                      onClick={() => handleUpvote(post.id)}
                       className="flex items-center text-green-500 hover:text-green-600 transition-colors duration-200"
                       aria-label="Upvote"
                     >
                       <FaThumbsUp className="mr-1" />
-                      <span>{post.upvotes}</span>
+                      <span>{post.upvotes.length}</span>
                     </button>
                     {/* Downvote Button */}
                     <button
-                      onClick={() => handleDownvote(post.id)}
                       className="flex items-center text-red-500 hover:text-red-600 transition-colors duration-200"
                       aria-label="Downvote"
                     >
                       <FaThumbsDown className="mr-1" />
-                      <span>{post.downvotes}</span>
+                      <span>{post.downvotes.length}</span>
                     </button>
                   </div>
                   {/* Comments Button */}
@@ -152,7 +116,6 @@ const PostGallery: React.FC = () => {
                     aria-label="Comments"
                   >
                     <FaComments className="mr-1" />
-                    <span>{post.comments?.length ?? 0}</span>
                   </button>
                 </div>
               </div>
