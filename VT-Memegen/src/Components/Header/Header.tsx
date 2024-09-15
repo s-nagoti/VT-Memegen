@@ -31,7 +31,9 @@ const Header = ({
     <header className="bg-darkGrey shadow-md">
       <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
         {/* Logo or Brand Name */}
-        <div className="text-2xl font-bold text-maroon">{title}</div>
+        <button onClick={onHomeClick}>
+          <div className="text-2xl font-bold text-maroon">{title}</div>
+        </button>
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-4">

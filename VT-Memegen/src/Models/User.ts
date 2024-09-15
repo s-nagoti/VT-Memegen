@@ -8,5 +8,6 @@ export interface User {
     profilePicture?: string;
     posts?: string[];
     createdAt: Date;
+    likedPosts?: string[];
 }
 

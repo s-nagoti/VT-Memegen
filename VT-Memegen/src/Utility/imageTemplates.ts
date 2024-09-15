@@ -20,7 +20,7 @@ export interface TextArea {
       alt: 'Template 1',
       textAreas: [
         { key: 'leftButton1', placeholder: 'Left Button', position: { top: '15%', left: '25%' } },
-        { key: 'bottomText1', placeholder: 'Right Button', position: { top: '10%', left: '60%' } },
+        { key: 'bottomText1', placeholder: 'Right Button', position: { top: '10%', left: '57%' } },
       ],
     },
     {
@@ -29,7 +29,7 @@ export interface TextArea {
       textAreas: [
         { key: 'leftText2', placeholder: 'Left Text', position: { top: '40%', left: '27%' } },
         { key: 'middleText2', placeholder: 'Middle Text', position: { top: '40%', left: '60%' } },
-        { key: 'rightText2', placeholder: 'Right Text', position: { top: '40%', left: '80%' } },
+        { key: 'rightText2', placeholder: 'Right Text', position: { top: '30%', left: '85%' } },
       ],
     },
     {
@@ -44,7 +44,7 @@ export interface TextArea {
         alt: 'Template 4',
         textAreas: [
           { key: 'topLeftText4', placeholder: 'Top Left Text', position: { top: '35%', left: '20%' } },
-          { key: 'topRightText4', placeholder: 'Top Right Text', position: { top: '20%', left: '80%' } },
+          { key: 'topRightText4', placeholder: 'Top Right Text', position: { top: '15%', left: '80%' } },
           { key: 'bottomLeftText4', placeholder: 'Bottom Left Text', position: { top: '80%', left: '15%' } },
           { key: 'bottomMiddleText4', placeholder: 'Bottom Middle Text', position: { top: '80%', left: '50%' } },
           { key: 'bottomRightText4', placeholder: 'Bottom Right Text', position: { top: '67%', left: '90%' } }
@@ -55,8 +55,8 @@ export interface TextArea {
         src: '../../src/assets/template5.jpg', // Replace with your image paths
         alt: 'Template 5',
         textAreas: [
-          { key: 'leftText5', placeholder: 'Left Text', position: { top: '40%', left: '35%' } },
-          { key: 'rightText5', placeholder: 'Right Text', position: { top: '5%', left: '70%' } },
+          { key: 'leftText5', placeholder: 'Left Text', position: { top: '40%', left: '30%' } },
+          { key: 'rightText5', placeholder: 'Right Text', position: { top: '10%', left: '70%' } },
         ],
       },
       {
@@ -71,8 +71,8 @@ export interface TextArea {
         src: '../../src/assets/template7.jpg', // Replace with your image paths
         alt: 'Template 7',
         textAreas: [
-          { key: 'topText7', placeholder: 'Top Text', position: { top: '10%', left: '15%' } },
-          { key: 'bottomText7', placeholder: 'Bottom Text', position: { top: '60%', left: '15%' } },
+          { key: 'topText7', placeholder: 'Top Text', position: { top: '25%', left: '25%' } },
+          { key: 'bottomText7', placeholder: 'Bottom Text', position: { top: '70%', left: '25%' } },
         ],
       },
       {
@@ -87,7 +87,7 @@ export interface TextArea {
         src: '../../src/assets/template9.jpg', // Replace with your image paths
         alt: 'Template 9',
         textAreas: [
-          { key: 'leftText9', placeholder: 'Left Text', position: { top: '10%', left: '20%' } },
+          { key: 'leftText9', placeholder: 'Left Text', position: { top: '20%', left: '25%' } },
           { key: 'rightText9', placeholder: 'Right Text', position: { top: '20%', left: '70%' } },
           { key: 'bottomText9', placeholder: 'Bottom Text', position: { top: '60%', left: '60%' } }
         ],
@@ -150,6 +150,41 @@ export interface TextArea {
         textAreas: [
           { key: 'houseText16', placeholder: 'House Text', position: { top: '30%', left: '25%' } },
           { key: 'girlText16', placeholder: 'Girl Text', position: { top: '40%', left: '70%' } }
+        ],
+      },
+      {
+        src: '../../src/assets/template17.jpg', // Replace with your image paths
+        alt: 'Template 17',
+        textAreas: [
+          { key: 'straightText17', placeholder: 'Straight Road Text', position: { top: '20%', left: '30%' } },
+          { key: 'rightText17', placeholder: 'Right Road Text', position: { top: '20%', left: '60%' } }
+        ],
+      },
+      {
+        src: '../../src/assets/template18.jpg', // Replace with your image paths
+        alt: 'Template 18',
+        textAreas: [
+          { key: 'topText18', placeholder: 'Top Text', position: { top: '10%', left: '25%' } },
+          { key: 'girlText16', placeholder: 'Girl Text', position: { top: '20%', left: '20%' } }
+        ],
+      },
+      {
+        src: '../../src/assets/template19.jpg', // Replace with your image paths
+        alt: 'Template 19',
+        textAreas: [
+          { key: 'topLeftText19', placeholder: 'Top Left Text', position: { top: '20%', left: '40%' } },
+          { key: 'topRightText19', placeholder: 'Top Right Text', position: { top: '25%', left: '90%' } },
+          { key: 'bottomLeftText19', placeholder: 'Bottom Left Text', position: { top: '70%', left: '35%' } },
+          { key: 'bottomRightText19', placeholder: 'Bottom Right Text', position: { top: '70%', left: '90%' } }
+        ],
+      },
+      {
+        src: '../../src/assets/template20.jpg', // Replace with your image paths
+        alt: 'Template 20',
+        textAreas: [
+          { key: 'guyText20', placeholder: 'Guy Text', position: { top: '30%', left: '25%' } },
+          { key: 'butterFlyText20', placeholder: 'Butterfly Text', position: { top: '30%', left: '80%' } },
+          { key: 'bottomText20', placeholder: 'Bottom Text', position: { top: '90%', left: '50%' } }
         ],
       },
     

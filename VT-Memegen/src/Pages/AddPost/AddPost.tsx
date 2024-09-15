@@ -109,6 +109,7 @@ const AddPost: React.FC = () => {
           texts: textInputs, // Store the custom texts
           createdAt: new Date(),
           authorId: user?.id ?? "",
+          upvotes: [],
           categories: selectedTags,
         });
 
@@ -285,12 +286,12 @@ const AddPost: React.FC = () => {
               </h3>
               <div className="flex flex-col md:flex-row md:space-x-6">
                 {/* Image Preview */}
-                <div className="md:w-1/2 flex justify-center mb-6 md:mb-0">
+                <div className="md:w-2/3 flex justify-center mb-6 md:mb-0">
                   <div className="relative" ref={previewRef}>
                     <img
                       src={imageTemplates[selectedTemplateIndex].src}
                       alt="Selected Template"
-                      className="w-full h-auto rounded-lg shadow-lg"
+                      className="w-full h-full rounded-lg shadow-lg"
                     />
                     {/* Overlay Texts */}
                     {imageTemplates[selectedTemplateIndex].textAreas.map(
@@ -302,11 +303,11 @@ const AddPost: React.FC = () => {
                             top: area.position.top,
                             left: area.position.left,
                             transform: "translate(-50%, -50%)",
-                            textShadow: "2px 2px 4px rgba(0,0,0,0.7)",
                             width: "90%", // Adjust as needed
                             maxWidth: "150px", // Set maximum width for the text box
                             whiteSpace: "pre-wrap", // Allow text to wrap
                             lineHeight: "1.2",
+                            color: textColors[area.key] || "#ffffff",
                           }}
                         >
                           {textInputs[area.key] || ""}

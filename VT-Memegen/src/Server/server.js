@@ -5,7 +5,7 @@ import dotenv from 'dotenv'; // Import dotenv
 // Initialize OpenAI
 const app = express();
 
-const openai = new OpenAI({apiKey: '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'});
+const openai = new OpenAI({apiKey: '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'});
 
 app.use(cors());
 
@@ -29,7 +29,7 @@ app.post('/api/explain-image', async (req, res) => {
         {
           role: 'user',
           content: [
-            {type: 'text', text: "Please explain this meme in detail. Rate it 1 out of 10 for funny."},
+            {type: 'text', text: "Please explain this meme in detail. Rate it 1 out of 10 for funny and keep it under 5 sentences"},
             {type: 'image_url', image_url: {url: imageUrl}}
           ]
         }

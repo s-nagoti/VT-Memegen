@@ -26,7 +26,12 @@ const Register: React.FC = () => {
     setLoading(true); // Start loading
 
     try {
+      if(email.includes('@vt.edu')){
       await register(email, password);
+      }else{
+        setError('Please use a valid VT email');
+      }
+      
       setLoading(false);
       navigate('/email-confirmation');
     } catch (err: any) {

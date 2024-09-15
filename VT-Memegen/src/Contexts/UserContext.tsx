@@ -49,6 +49,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       // Register the user with Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await sendEmailVerification(userCredential.user);
+
       const firebaseUser = userCredential.user;
 
 

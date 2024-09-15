@@ -29,7 +29,8 @@ function AuthWrapper() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
-        {currentUser?.emailVerified ? (
+        {currentUser?.emailVerified ? 
+        (
           <Route path="/*" element={<App />} />
         ) : (
           <Route path="/email-confirmation" element={<EmailConfirmation/>} />

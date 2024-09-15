@@ -44,7 +44,7 @@ const PostGallery: React.FC = () => {
           createdAt: data.createdAt,
           authorId: data.authorId,
           commentsCount,
-          categories: data.category || [], // Assuming category is an array of tags
+          categories: data.categories || [], // Assuming category is an array of tags
         });
       }
 
@@ -92,7 +92,7 @@ const PostGallery: React.FC = () => {
   }
 
   // List of available tags including 'Show All'
-  const uniqueTags = ['Housing', 'Classes', 'Dining', 'NightLife', 'Sports'];
+  const uniqueTags = ['Housing', 'Classes', 'Dining', 'Night Life', 'Sports', 'Dorms'];
 
   return (
     <div className="container mx-auto p-4">
