@@ -1,5 +1,5 @@
 // Header.tsx
-import React from 'react';
+import React from "react";
 
 interface HeaderProps {
   title?: string;
@@ -8,31 +8,38 @@ interface HeaderProps {
   onProfileClick?: () => void;
   onCreatePostClick?: () => void;
   showCreatePost?: boolean;
+  showHome?: boolean;
+  showProfile?: boolean;
 }
 
 const Header = ({
-  title = 'VT Memegen', // Default title
+  title = "VT Memegen", // Default title
   email,
   onHomeClick,
   onProfileClick,
   onCreatePostClick,
   showCreatePost,
+  showHome,
+  showProfile,
 }: HeaderProps) => {
   // Extract the username from the email
-  const username = email ? email.split('@')[0] : 'Profile';
+  const username = email ? email.split("@")[0] : "Profile";
 
   return (
     <header className="flex justify-between items-center p-5 bg-gray-100 shadow-md">
       <div className="text-2xl font-bold">{title}</div>
       <div className="flex items-center gap-4">
+        {showHome &&
         <button
           className="px-4 py-2 font-medium hover:bg-gray-200 rounded"
           onClick={onHomeClick}
         >
           Home
         </button>
+        }
 
- <div className="relative">
+        {showProfile &&
+        <div className="relative">
           <button
             className="px-4 py-2 font-medium hover:bg-gray-200 rounded inline-flex items-center"
             onClick={onProfileClick}
@@ -54,15 +61,16 @@ const Header = ({
             </svg>
           </button>
         </div>
-        { showCreatePost &&
-        <button
-          className="px-4 py-2 font-medium text-white bg-red-600 hover:bg-red-700 rounded"
-          onClick={onCreatePostClick}
-        >
-          Create Post
-        </button>
         }
-       
+
+        {showCreatePost && (
+          <button
+            className="px-4 py-2 font-medium text-white bg-red-600 hover:bg-red-700 rounded"
+            onClick={onCreatePostClick}
+          >
+            Create Post
+          </button>
+        )}
       </div>
     </header>
   );

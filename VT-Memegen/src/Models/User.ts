@@ -6,8 +6,7 @@ export interface User {
     email: string | null;
     bio: string;
     profilePicture?: string;
-    upvotes: number;
-    posts?: Post[];
+    posts?: string[];
     createdAt: Date;
 }
 

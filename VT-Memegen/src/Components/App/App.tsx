@@ -38,6 +38,7 @@ function App() {
         onProfileClick={handleProfileClick}
         onCreatePostClick={handleCreatePostClick}
         showCreatePost={true}
+        showProfile={true}
         />
         <PostGallery />
     </div>
