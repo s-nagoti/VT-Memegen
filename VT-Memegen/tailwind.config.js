@@ -4,16 +4,16 @@ export default {
     "./index.html",
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
+  darkMode: 'class', // Enable dark mode via a CSS class
   theme: {
     extend: {
       colors: {
-        maroon: {
-          DEFAULT: '#800000', // Define the maroon color
-          dark: '#4B0000',
-          light: '#B03060',
+        darkGrey: '#1f1f1f',
+        maroon: '#800000',
+        accentRed: '#b22222',
+        maroonDark: '#660000', // Darker shade for hover effects
       }
     },
   },
   plugins: [],
-}
 }
