@@ -76,7 +76,7 @@ const ProfilePage: React.FC = () => {
     try {
       // Delete user documents (e.g., posts)
       const userPostsRef = collection(db, 'posts');
-      const q = query(userPostsRef, where('userId', '==', user.id));
+      const q = query(userPostsRef, where('authorId', '==', user.id));
       const querySnapshot = await getDocs(q);
       const batch = writeBatch(db);
 

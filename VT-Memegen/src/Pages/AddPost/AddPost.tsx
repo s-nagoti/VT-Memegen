@@ -18,6 +18,7 @@ const AddPost: React.FC = () => {
   const [textInputs, setTextInputs] = useState<{ [key: string]: string }>({});
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [createdPostId, setCreatedPostId] = useState<string | null>(null);
   
   const {currentUser} = useAuth();
   const {user} = useUser();
@@ -74,7 +75,7 @@ const AddPost: React.FC = () => {
         await updateDoc(doc(db, 'posts', docRef.id), { id: docRef.id });
 
         setMessage(`Post created successfully with ID: ${docRef.id}`);
-
+        setCreatedPostId(docRef.id);
         // Reset form
         setTitle('');
         setDescription('');
@@ -88,6 +89,11 @@ const AddPost: React.FC = () => {
       setLoading(false);
     }
   };
+
+
+  const handleGoToPost = () => {
+    navigate(`/posts/${createdPostId}`);
+  }
 
   return (
     <div className='flex flex-col min-h-screen'>
@@ -210,6 +216,8 @@ const AddPost: React.FC = () => {
           {message}
         </p>
       )}
+       {createdPostId != null && <button onClick={handleGoToPost}>Click here to see your post!</button>}
+      
     </div>
     </div>
   );

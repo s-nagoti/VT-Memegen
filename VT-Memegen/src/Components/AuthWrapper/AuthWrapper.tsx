@@ -18,7 +18,11 @@ function AuthWrapper() {
         <UserProvider>
       <Routes>
         {currentUser ? (
-          <Route path="/*" element={<App />} />
+            currentUser.emailVerified ? (
+                <Route path="/*" element={<App />} />
+            ) : (
+                <Route path="/*" element={<Navigate to="/email-confirmation" replace />} />
+            )
         ) : (
           <Route path="/*" element={<Navigate to="/login" replace />} />
         )}
