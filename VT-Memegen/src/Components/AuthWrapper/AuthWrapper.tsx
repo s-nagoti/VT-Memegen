@@ -7,13 +7,15 @@ import Logout from "../../Pages/Logout/Logout";
 import EmailConfirmation from "../../Pages/EmailConfirmation/EmailConfirmation";
 import AddPost from "../../Pages/AddPost/AddPost";
 import PostDetailPage from "../../Pages/PostDetailPage/PostDetailPage";
+import ProfilePage from "../../Pages/ProfilePage/ProfilePage";
 import { useAuth } from '../../Contexts/AuthContext';
-
+import { UserProvider } from '../../Contexts/UserContext';
 function AuthWrapper() {
   
-    const { currentUser, isEmailVerified} = useAuth();
+    const { currentUser} = useAuth();
   
     return (
+        <UserProvider>
       <Routes>
         {currentUser ? (
           <Route path="/*" element={<App />} />
@@ -30,7 +32,9 @@ function AuthWrapper() {
         )}
         <Route path="/add-post" element={<AddPost />} />
         <Route path="/posts/:postId" element={<PostDetailPage />} />
+        <Route path="/profile-page" element={<ProfilePage />} />
       </Routes>
+      </UserProvider>
     );
   }
 

@@ -20,5 +20,5 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "TrashCan/PostCarousel"]
+  "include": ["src", "TrashCan/PostCarousel", "TrashCan/User"]
 }
