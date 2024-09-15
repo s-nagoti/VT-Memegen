@@ -58,7 +58,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         email: email,
         username: email.split('@')[0],
         bio: '',
-        upvotes: 0,
         createdAt: new Date(),
         // Add other fields as needed
       };
