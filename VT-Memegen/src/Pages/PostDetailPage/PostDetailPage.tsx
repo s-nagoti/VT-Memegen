@@ -245,7 +245,7 @@ const PostDetailPage: React.FC = () => {
               </div>
             ))
           )}
-
+        </div>
         </div>
       </div>
     </div>
