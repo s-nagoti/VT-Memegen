@@ -20,6 +20,7 @@ const AddPost: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [createdPostId, setCreatedPostId] = useState<string | null>(null);
+  const [textColors, setTextColors] = useState<{ [key: string]: string }>({});
   
   const {currentUser} = useAuth();
   const {user} = useUser();
@@ -29,6 +30,14 @@ const AddPost: React.FC = () => {
   // Handle text input changes
   const handleTextChange = (key: string, value: string) => {
     setTextInputs((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleColorChange = (key : string, color : string) => {
+    setTextColors(prevColors => ({
+      ...prevColors,
+      [key]: color,
+    }));
+    console.log('Updated Colors:', textColors);
   };
 
   // Handle form submission
@@ -63,18 +72,18 @@ const AddPost: React.FC = () => {
         const finalImageUrl = await getDownloadURL(storageRef);
 
 
-          // Create FormData and append the image blob
-      const formData = new FormData();
-      formData.append('image', blob, `post_${Date.now()}.jpg`); // Optional: provide a filename
+      //     // Create FormData and append the image blob
+      // const formData = new FormData();
+      // formData.append('image', blob, `post_${Date.now()}.jpg`); // Optional: provide a filename
 
-      // Send the image to the backend for explanation
-      const backendResponse = await axios.post('http://localhost:5000/api/explain-image', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      // // Send the image to the backend for explanation
+      // const backendResponse = await axios.post('http://localhost:5000/api/explain-image', formData, {
+      //   headers: {
+      //     'Content-Type': 'multipart/form-data',
+      //   },
+      // });
 
-      const explanation = backendResponse.data.explanation;
+      // const explanation = backendResponse.data.explanation;
 
         // Add a new document to Firestore
         const docRef = await addDoc(collection(db, 'posts'), {
@@ -83,8 +92,7 @@ const AddPost: React.FC = () => {
           imageUrl: finalImageUrl,
           texts: textInputs, // Store the custom texts
           createdAt: new Date(),
-          authorId: user?.id,
-          aiExplanation: explanation,
+          authorId: user?.id ?? '',
         });
 
         // Update the document to include the generated ID
@@ -192,6 +200,7 @@ const AddPost: React.FC = () => {
                       width: '90%', // Adjust as needed
                       maxWidth: '100px', // Set maximum width for the text box
                       whiteSpace: 'pre-wrap', // Allow text to wrap
+                      color: textColors[area.key] || 'white', // Use dynamic color
                       lineHeight: '1'
                     }}
                   >
@@ -213,7 +222,17 @@ const AddPost: React.FC = () => {
                     onChange={(e) => handleTextChange(area.key, e.target.value)}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
+                  {/* Color Picker */}
+                  <div className="mt-2 flex items-center">
+                    <label className="text-gray-700 mr-2">Text Color:</label>
+                    <input 
+                      type="color"
+                      value={textColors[area.key] || '#ffffff'}
+                      onChange={(e) => handleColorChange(area.key, e.target.value)}
+                      className="w-10 h-10 p-1 border border-gray-300 rounded-full cursor-pointer"
+                    />
                 </div>
+              </div>
               ))}
             </div>
           </div>
@@ -236,7 +255,7 @@ const AddPost: React.FC = () => {
         </p>
       )}
        {createdPostId != null && <button onClick={handleGoToPost}>Click here to see your post!</button>}
-      
+
     </div>
     </div>
   );
