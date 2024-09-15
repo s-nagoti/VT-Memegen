@@ -3,6 +3,7 @@ import React, { useState, FormEvent } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../firebaseConfig';
 import { useAuth } from '../../Contexts/AuthContext';
+import { useUser } from '../../Contexts/UserContext';
 import { useNavigate } from 'react-router-dom';
 
 const Register: React.FC = () => {
@@ -12,6 +13,7 @@ const Register: React.FC = () => {
 
   const [error, setError] = useState<string | null>(null);
   const { sendVerificationEmail } = useAuth();
+  const { register } = useUser();
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -25,28 +27,18 @@ const Register: React.FC = () => {
     setMessage('');
     setLoading(true); // Start loading
 
+    //add register here
     try {
-      // Create user with email and password
-      await createUserWithEmailAndPassword(auth, email, password);
-      
-      // Send verification email
-      await sendVerificationEmail(); // Ensure sendVerificationEmail accepts a user object
-
-      // Set success message
-      setMessage('Registration successful! Please check your email to verify your account.');
-
-      // Optionally, navigate to email confirmation page after a delay
-      setTimeout(() => {
-        navigate('/email-confirmation');
-      }, 3000);
+      await register(email, password)
+      setLoading(false)
+      navigate('email-confirmation')
     } catch (err: any) {
-      // Set error message
       setError(err.message);
-    } finally {
-      setLoading(false); // Stop loading
+      setLoading(false)
     }
   };
 
+ 
   // Handler to navigate to Login page
   const handleLogin = () => {
     navigate('/login');
@@ -108,40 +100,7 @@ const Register: React.FC = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-maroon"
               placeholder="Your password"
             />
-            {/* Password Visibility Toggle Button */}
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600"
-              aria-label={showPassword ? 'Hide password' : 'Show password'}
-            >
-              {showPassword ? (
-                // Hide Password Icon
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M3.707 3.293a1 1 0 00-1.414 1.414L4.586 6l-2.293 2.293a1 1 0 001.414 1.414L6 7.414l2.293 2.293a1 1 0 001.414-1.414L7.414 6l2.293-2.293a1 1 0 00-1.414-1.414L6 4.586 3.707 2.293z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              ) : (
-                // Show Password Icon
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path d="M10 3C5 3 1.73 6.11 0 10c1.73 3.89 5 7 10 7s8.27-3.11 10-7c-1.73-3.89-5-7-10-7zm0 12a5 5 0 100-10 5 5 0 000 10z" />
-                  <path d="M10 7a3 3 0 100 6 3 3 0 000-6z" />
-                </svg>
-              )}
-            </button>
+           
           </div>
 
           {/* Password Strength Indicator */}

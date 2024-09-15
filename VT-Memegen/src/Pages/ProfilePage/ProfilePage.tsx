@@ -27,14 +27,15 @@ const ProfilePage: React.FC = () => {
         querySnapshot.forEach((doc) => {
           const data = doc.data();
           userPosts.push({
-            id: doc.id,
-            imageUrl: data.imageUrl,
+            id: data.id,
             title: data.title,
-            texts: data.texts,
             description: data.description,
+            imageUrl: data.imageUrl,
+            texts: data.texts,
             upvotes: data.upvotes || 0,
             downvotes: data.downvotes || 0,
             createdAt: data.createdAt,
+            authorId: data.authorId,
           });
         });
         setPosts(userPosts);

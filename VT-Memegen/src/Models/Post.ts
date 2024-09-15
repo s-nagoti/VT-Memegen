@@ -6,8 +6,9 @@ export interface Post {
     description: string,
     imageUrl: string,
     texts: string, // Store the custom texts
-    upvotes: number,
-    downvotes: number,
+    upvotes: string[],
+    downvotes: string[],
     createdAt: Date,
+    authorId: string,
     comments?: Comment[]
 }

@@ -5,7 +5,6 @@ import { increment } from 'firebase/firestore';
 import { useParams } from 'react-router-dom';
 import { doc, getDoc, updateDoc, collection, addDoc, query, orderBy, onSnapshot } from 'firebase/firestore';
 import { db } from '../../firebaseConfig';
-import Header from '../../Components/Header/Header';
 import { useAuth } from '../../Contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import {Post} from '../../Models/Post'

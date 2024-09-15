@@ -2,13 +2,14 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { User } from '../Models/User';
 import { auth } from '../firebaseConfig';
-import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { sendEmailVerification, createUserWithEmailAndPassword , onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 
 // Define the shape of the context
 interface UserContextType {
   user: User | null;
+  register: (email: string, password: string) => Promise<void>;
   setUser: (user: User | null) => void;
 }
 
@@ -33,15 +34,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         if (userDoc.exists()) {
           const userData = userDoc.data() as User;
           setUser(userData);
-        } else {
-          // If user data doesn't exist in Firestore, set minimal data
-          setUser({
-            id: firebaseUser.uid,
-            email: firebaseUser.email ,
-            username: "user",
-            upvotes: 0,
-            bio: "",
-          })
         }
       } else {
         setUser(null);
@@ -52,7 +44,33 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
-  return <UserContext.Provider value={{ user, setUser }}>{children}</UserContext.Provider>;
+  const register = async (email: string, password: string) => {
+    try {
+      // Register the user with Firebase Authentication
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      await sendEmailVerification(userCredential.user);
+      const firebaseUser = userCredential.user;
+
+
+      // Create a user document in Firestore
+      const newUser: User = {
+        id: firebaseUser.uid,
+        email: email,
+        bio: '',
+        upvotes: 0,
+        createdAt: new Date(),
+        // Add other fields as needed
+      };
+
+      await setDoc(doc(db, 'users', firebaseUser.uid), newUser);
+      setUser(newUser);
+    } catch (error) {
+      console.error('Error registering user:', error);
+      throw error; // Re-throw the error to handle it in the calling component
+    }
+  };
+
+  return <UserContext.Provider value={{ user, setUser, register }}>{children}</UserContext.Provider>;
 };
 
 // Custom hook to use the UserContext

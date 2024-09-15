@@ -35,15 +35,15 @@ const PostGallery: React.FC = () => {
         querySnapshot.forEach((doc) => {
           const data = doc.data();
           fetchedPosts.push({
-            id: doc.id,
-            imageUrl: data.imageUrl,
+            id: data.id,
             title: data.title,
-            texts: data.texts,
-            createdAt: data.createdAt,
             description: data.description,
-            upvotes: data.upvotes || 0, // Initialize upvotes
-            downvotes: data.downvotes || 0, // Initialize downvotes
-            comments: data.comments || 0, // Initialize comments
+            imageUrl: data.imageUrl,
+            texts: data.texts,
+            upvotes: data.upvotes || 0,
+            downvotes: data.downvotes || 0,
+            createdAt: data.createdAt,
+            authorId: data.authorId,
           });
         });
         setPosts(fetchedPosts);
@@ -64,14 +64,14 @@ const PostGallery: React.FC = () => {
    * @param postId - The ID of the post to upvote
    */
   const handleUpvote = (postId: string) => {
-    setPosts((prevPosts) =>
-      prevPosts.map((post) =>
-        post.id === postId
-          ? { ...post, upvotes: (post.upvotes || 0) + 1 }
-          : post
-      )
-    );
-    // TODO: Update the upvotes in Firestore
+    // setPosts((prevPosts) =>
+    //   prevPosts.map((post) =>
+    //     post.id === postId
+    //       ? { ...post, upvotes: (post.upvotes || 0) + 1 }
+    //       : post
+    //   )
+    // );
+    // // TODO: Update the upvotes in Firestore
   };
 
   /**
@@ -81,14 +81,14 @@ const PostGallery: React.FC = () => {
    * @param postId - The ID of the post to downvote
    */
   const handleDownvote = (postId: string) => {
-    setPosts((prevPosts) =>
-      prevPosts.map((post) =>
-        post.id === postId
-          ? { ...post, downvotes: (post.downvotes || 0) + 1 }
-          : post
-      )
-    );
-    // TODO: Update the downvotes in Firestore
+    // setPosts((prevPosts) =>
+    //   prevPosts.map((post) =>
+    //     post.id === postId
+    //       ? { ...post, downvotes: (post.downvotes || 0) + 1 }
+    //       : post
+    //   )
+    // );
+    // // TODO: Update the downvotes in Firestore
   };
 
   if (loading) {

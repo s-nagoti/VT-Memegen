@@ -70,37 +70,7 @@ const Login: React.FC = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-maroon"
               placeholder="Your password"
             />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600"
-              aria-label={showPassword ? 'Hide password' : 'Show password'}
-            >
-              {showPassword ? (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M3.707 3.293a1 1 0 00-1.414 1.414L4.586 6l-2.293 2.293a1 1 0 001.414 1.414L6 7.414l2.293 2.293a1 1 0 001.414-1.414L7.414 6l2.293-2.293a1 1 0 00-1.414-1.414L6 4.586 3.707 2.293z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              ) : (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path d="M10 3C5 3 1.73 6.11 0 10c1.73 3.89 5 7 10 7s8.27-3.11 10-7c-1.73-3.89-5-7-10-7zm0 12a5 5 0 100-10 5 5 0 000 10z" />
-                  <path d="M10 7a3 3 0 100 6 3 3 0 000-6z" />
-                </svg>
-              )}
-            </button>
+            
           </div>
 
           {/* Submit Button */}
