@@ -37,6 +37,7 @@ const ProfilePage: React.FC = () => {
             downvotes: data.downvotes || 0,
             createdAt: data.createdAt,
             authorId: data.authorId,
+            commentsCount: data.commentsCount || 0,
           });
         });
         setPosts(userPosts);

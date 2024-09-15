@@ -11,4 +11,5 @@ export interface Post {
     createdAt: Date,
     authorId: string,
     category?: string,
+    commentsCount: number,
 }

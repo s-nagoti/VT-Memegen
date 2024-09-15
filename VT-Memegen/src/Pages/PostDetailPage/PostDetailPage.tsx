@@ -85,6 +85,7 @@ const PostDetailPage: React.FC = () => {
             authorId: authorId,
             upvotes: postData.upvotes || [],
             downvotes: postData.downvotes || [],
+            commentsCount: postData.commentsCount || 0,
             // include other fields as needed
           };
 

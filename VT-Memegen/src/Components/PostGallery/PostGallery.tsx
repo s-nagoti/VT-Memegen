@@ -1,6 +1,6 @@
 // PostGallery.tsx
 import React, { useEffect, useState } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, query, getCountFromServer } from 'firebase/firestore';
 import { db } from '../../firebaseConfig'; // Import the Firestore database
 import { useNavigate } from 'react-router-dom';
 import { FaThumbsUp, FaThumbsDown, FaComments } from 'react-icons/fa'; // Import icons from react-icons
@@ -30,12 +30,23 @@ const PostGallery: React.FC = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, 'posts'));
+        const postsCollection = collection(db, 'posts');
+        const querySnapshot = await getDocs(postsCollection);
         const fetchedPosts: Post[] = [];
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
+  
+        // Iterate through each post document
+        for (const docSnap of querySnapshot.docs) {
+          const data = docSnap.data();
+          const postId = docSnap.id; // Use document ID as post ID
+  
+          // Fetch comments count using aggregation query
+          const commentsCollection = collection(db, 'posts', postId, 'comments');
+          const commentsQuery = query(commentsCollection);
+          const commentsCountSnapshot = await getCountFromServer(commentsQuery);
+          const commentsCount = commentsCountSnapshot.data().count;
+  
           fetchedPosts.push({
-            id: data.id,
+            id: postId,
             title: data.title,
             description: data.description,
             imageUrl: data.imageUrl,
@@ -44,8 +55,10 @@ const PostGallery: React.FC = () => {
             downvotes: data.downvotes || [],
             createdAt: data.createdAt,
             authorId: data.authorId,
+            commentsCount, // Add comments count
           });
-        });
+        }
+  
         setPosts(fetchedPosts);
       } catch (error) {
         console.error('Error fetching posts:', error);
@@ -53,9 +66,10 @@ const PostGallery: React.FC = () => {
         setLoading(false);
       }
     };
-
+  
     fetchPosts();
   }, []);
+  
 
   if (loading) {
     return (
@@ -101,6 +115,14 @@ const PostGallery: React.FC = () => {
                       <span>{post.upvotes.length}</span>
                     </button>
                     {/* Downvote Button */}
+                    <button
+                      className="flex items-center text-red-500 hover:text-red-600 transition-colors duration-200"
+                      aria-label="Downvote"
+                    >
+                      <FaThumbsDown className="mr-1" />
+                      <span>{post.downvotes.length}</span>
+                    </button>
+
                     <button
                       className="flex items-center text-red-500 hover:text-red-600 transition-colors duration-200"
                       aria-label="Downvote"
