@@ -23,6 +23,7 @@ import { Post } from '../../Models/Post';
 import { Comment } from '../../Models/Comment';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../Components/Header/Header';
+import { FaArrowUp, FaArrowDown, FaSpinner, FaExclamationCircle, FaCheckCircle } from 'react-icons/fa';
 
 const PostDetailPage: React.FC = () => {
   const { postId } = useParams<{ postId: string }>();
@@ -31,17 +32,16 @@ const PostDetailPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [commentText, setCommentText] = useState<string>('');
   const [comments, setComments] = useState<Comment[]>([]);
+  const [commentLoading, setCommentLoading] = useState<boolean>(false);
+  const [voteLoading, setVoteLoading] = useState<boolean>(false);
+
   const navigate = useNavigate();
 
-  const { user } = useUser();
-  const { currentUser } = useAuth();
+  // Contexts
+  const { user } = useUser(); // Assuming user contains user.id and user.username
+  const { currentUser } = useAuth(); // If needed
 
-  useEffect(() => {
-    if (!postId) return;
-    const unsubscribe = fetchComments(postId, setComments);
-    return () => unsubscribe();
-  }, [postId]);
-
+  // Fetch post data
   useEffect(() => {
     const fetchPost = async () => {
       try {
@@ -70,7 +70,6 @@ const PostDetailPage: React.FC = () => {
           };
 
           setPost(postDetails);
-          setLoading(false);
         } else {
           setError('Post not found.');
         }
@@ -85,34 +84,38 @@ const PostDetailPage: React.FC = () => {
     fetchPost();
   }, [postId]);
 
-  const fetchComments = (postId: string, setComments: (comments: Comment[]) => void) => {
+  // Fetch comments in real-time
+  useEffect(() => {
+    if (!postId) return;
+
     const commentsRef = collection(db, 'posts', postId, 'comments');
     const q = query(commentsRef, orderBy('createdAt', 'asc'));
 
     const unsubscribe = onSnapshot(
       q,
       (querySnapshot) => {
-        const comments: Comment[] = [];
+        const fetchedComments: Comment[] = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data();
-          comments.push({
+          fetchedComments.push({
             id: doc.id,
             authorId: data.authorId,
             authorUsername: data.authorUsername,
             text: data.text,
-            likes: [],
+            likes: data.likes || [],
             createdAt: data.createdAt.toDate(),
           });
         });
-        setComments(comments);
+        setComments(fetchedComments);
       },
       (error) => {
         console.error('Error fetching comments:', error);
+        setError('Failed to load comments.');
       }
     );
 
-    return unsubscribe;
-  };
+    return () => unsubscribe(); // Cleanup on unmount or postId change
+  }, [postId]);
 
   const handleUpvote = async () => {
     if (!user || !post) {
@@ -120,6 +123,7 @@ const PostDetailPage: React.FC = () => {
       return;
     }
 
+    setVoteLoading(true);
     try {
       const postRef = doc(db, 'posts', post.id);
       const downvotes = post.downvotes as string[];
@@ -156,6 +160,8 @@ const PostDetailPage: React.FC = () => {
     } catch (err: any) {
       console.error('Error upvoting:', err);
       setError('Failed to upvote.');
+    } finally {
+      setVoteLoading(false);
     }
   };
 
@@ -165,6 +171,7 @@ const PostDetailPage: React.FC = () => {
       return;
     }
 
+    setVoteLoading(true);
     try {
       const postRef = doc(db, 'posts', post.id);
       const downvotes = post.downvotes as string[];
@@ -201,9 +208,12 @@ const PostDetailPage: React.FC = () => {
     } catch (err: any) {
       console.error('Error downvoting:', err);
       setError('Failed to downvote.');
+    } finally {
+      setVoteLoading(false);
     }
   };
 
+  // Handle Add Comment
   const handleAddComment = async (e: FormEvent) => {
     e.preventDefault();
 
@@ -217,158 +227,185 @@ const PostDetailPage: React.FC = () => {
       return;
     }
 
+    setCommentLoading(true);
     try {
       const commentsRef = collection(db, 'posts', postId!, 'comments');
       const docRef = await addDoc(commentsRef, {
         authorId: user.id,
-        authorUsername: user.username ?? "",
+        authorUsername: user.username ?? '',
         text: commentText.trim(),
         createdAt: Timestamp.fromDate(new Date()),
+        likes: [],
       });
 
+      // Optionally, update local state optimistically
       const newComment: Comment = {
         id: docRef.id,
         authorId: user.id,
-        authorUsername: user.username ?? "",
+        authorUsername: user.username ?? '',
         likes: [],
         text: commentText.trim(),
         createdAt: new Date(),
       };
 
+      setComments((prevComments) => [...prevComments, newComment]);
+
+      // Clear the comment input field
       setCommentText('');
+
+      // Clear any existing errors
       setError(null);
     } catch (error) {
       console.error('Error adding comment:', error);
       setError('Failed to add comment.');
+    } finally {
+      setCommentLoading(false);
     }
   };
 
+  // Render Loading State
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-gray-500">Loading post...</div>
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <FaSpinner className="animate-spin text-4xl text-blue-500" />
+        <span className="ml-2 text-xl text-gray-700">Loading post...</span>
       </div>
     );
   }
 
+  // Render Error State
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-red-600">{error}</div>
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="flex items-center bg-red-100 text-red-700 px-6 py-4 rounded-lg">
+          <FaExclamationCircle className="w-6 h-6 mr-3" />
+          <span>{error}</span>
+        </div>
       </div>
     );
   }
 
+  // Render Not Found State
   if (!post) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-gray-500">Post not found.</div>
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="flex items-center bg-yellow-100 text-yellow-700 px-6 py-4 rounded-lg">
+          <FaExclamationCircle className="w-6 h-6 mr-3" />
+          <span>Post not found.</span>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-4 bg-darkGrey text-white">
-      <Header onHomeClick={() => navigate('/')} />
-      
-      {/* Post Container */}
-      <div className="bg-gray-800 rounded-lg shadow-md overflow-hidden">
-        <div className="flex flex-col md:flex-row">
-          <div className="md:w-1/2">
-            <img
-              src={post.imageUrl}
-              alt={post.title}
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <div className="md:w-1/2 p-6 flex flex-col justify-between">
-            <div>
-              <h2 className="text-2xl font-bold text-maroon mb-4">{post.title}</h2>
-              <p className="text-gray-300">{post.description}</p>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <Header 
+      email={user?.email || ''}
+      onHomeClick={() => navigate('/')}
+      showHome={true}
+      showProfile={true} />
+
+      {/* Main Content */}
+      <div className="container mx-auto p-6">
+        {/* Post Container */}
+        <div className="bg-white rounded-lg shadow-md overflow-hidden">
+          <div className="flex flex-col md:flex-row">
+            {/* Image Section */}
+            <div className="md:w-1/2">
+              <img
+                src={post.imageUrl}
+                alt={post.title}
+                className="w-full h-full object-cover"
+              />
             </div>
-            {/* Upvote/Downvote Section */}
-            <div className="mt-6 flex items-center space-x-4">
-              <button
-                onClick={handleUpvote}
-                className={`flex items-center text-maroon hover:text-maroon-dark ${
-                  post.upvotes.includes(user?.id || '') ? 'font-semibold' : ''
-                }`}
-              >
-                {/* Upvote Icon */}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 mr-1"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+            {/* Content Section */}
+            <div className="md:w-1/2 p-6 flex flex-col justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-800 mb-4">{post.title}</h2>
+                <p className="text-gray-700">{post.description}</p>
+              </div>
+              {/* Upvote/Downvote Section */}
+              <div className="mt-6 flex items-center space-x-6">
+                {/* Upvote Button */}
+                <button
+                  onClick={handleUpvote}
+                  disabled={voteLoading}
+                  className={`flex items-center space-x-2 text-gray-700 hover:text-blue-600 transition-colors duration-200 ${
+                    post.upvotes.includes(user?.id || '') ? 'font-semibold' : ''
+                  }`}
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-                </svg>
-                <span>{post.upvotes.length}</span>
-              </button>
-              <button
-                onClick={handleDownvote}
-                className={`flex items-center text-maroon hover:text-maroon-dark ${
-                  post.downvotes.includes(user?.id || '') ? 'font-semibold' : ''
-                }`}
-              >
-                {/* Downvote Icon */}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 mr-1"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+                  <FaArrowUp className="w-5 h-5" />
+                  <span>{post.upvotes.length}</span>
+                </button>
+                {/* Downvote Button */}
+                <button
+                  onClick={handleDownvote}
+                  disabled={voteLoading}
+                  className={`flex items-center space-x-2 text-gray-700 hover:text-red-600 transition-colors duration-200 ${
+                    post.downvotes.includes(user?.id || '') ? 'font-semibold' : ''
+                  }`}
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-                <span>{post.downvotes.length}</span>
-              </button>
+                  <FaArrowDown className="w-5 h-5" />
+                  <span>{post.downvotes.length}</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Comment Section */}
-      <div className="mt-8 bg-gray-800 p-6 rounded-lg shadow-md">
-        <h3 className="text-xl font-semibold text-maroon mb-4">Comments</h3>
+        {/* Comments Section */}
+        <div className="mt-8 bg-white p-6 rounded-lg shadow-md">
+          <h3 className="text-xl font-semibold text-gray-800 mb-4">Comments</h3>
 
-        {/* Add Comment Form */}
-        <form onSubmit={handleAddComment} className="mb-6">
-          <textarea
-            value={commentText}
-            onChange={(e) => setCommentText(e.target.value)}
-            placeholder="Add a comment..."
-            className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-maroon resize-none text-white"
-            rows={3}
-            required
-          ></textarea>
-          <button
-            type="submit"
-            className={`mt-2 px-4 py-2 bg-maroon text-white rounded-lg hover:bg-maroon-dark transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-maroon ${
-              !commentText.trim() ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
-            disabled={!commentText.trim()}
-          >
-            Post Comment
-          </button>
-        </form>
+          {/* Add Comment Form */}
+          <form onSubmit={handleAddComment} className="mb-6">
+            <textarea
+              value={commentText}
+              onChange={(e) => setCommentText(e.target.value)}
+              placeholder="Add a comment..."
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              rows={3}
+              required
+            ></textarea>
+            <button
+              type="submit"
+              disabled={commentLoading || !commentText.trim()}
+              className={`mt-2 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                !commentText.trim() || commentLoading
+                  ? 'opacity-50 cursor-not-allowed'
+                  : ''
+              }`}
+            >
+              {commentLoading ? (
+                <>
+                  <FaSpinner className="animate-spin mr-2" />
+                  Posting...
+                </>
+              ) : (
+                'Post Comment'
+              )}
+            </button>
+          </form>
 
-        {/* Comments List */}
-        <div className="space-y-4">
-          {comments.length === 0 ? (
-            <p className="text-gray-500">No comments yet. Be the first to comment!</p>
-          ) : (
-            comments.map((comment) => (
-              <div key={comment.id} className="border-b pb-4">
-                <p className="text-maroon font-semibold">{comment.authorUsername}</p>
-                <p className="text-gray-300">{comment.text}</p>
-                <p className="text-sm text-gray-500">
-                  {new Date(comment.createdAt).toLocaleString()}
-                </p>
-              </div>
-            ))
-          )}
+          {/* Comments List */}
+          <div className="space-y-4">
+            {comments.length === 0 ? (
+              <p className="text-gray-500">No comments yet. Be the first to comment!</p>
+            ) : (
+              comments.map((comment) => (
+                <div key={comment.id} className="border-b pb-4">
+                  <div className="flex items-center justify-between">
+                    <p className="text-gray-800 font-semibold">{comment.authorUsername}</p>
+                    <p className="text-sm text-gray-500">
+                      {new Date(comment.createdAt).toLocaleString()}
+                    </p>
+                  </div>
+                  <p className="text-gray-700 mt-2">{comment.text}</p>
+                </div>
+              ))
+            )}
+          </div>
         </div>
       </div>
     </div>

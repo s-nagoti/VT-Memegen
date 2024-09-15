@@ -1,6 +1,7 @@
 // src/components/Header.tsx
 import React, { useState } from 'react';
 
+
 interface HeaderProps {
   title?: string;
   email?: string;
@@ -8,33 +9,42 @@ interface HeaderProps {
   onProfileClick?: () => void;
   onCreatePostClick?: () => void;
   showCreatePost?: boolean;
+  showHome?: boolean;
+  showProfile?: boolean;
 }
 
 const Header = ({
-  title = 'VT Memegen', // Default title
+  title = "VT Memegen", // Default title
   email,
   onHomeClick,
   onProfileClick,
   onCreatePostClick,
   showCreatePost,
+  showHome,
+  showProfile,
 }: HeaderProps) => {
   // Extract the username from the email
-  const username = email ? email.split('@')[0] : 'Profile';
+  const username = email ? email.split("@")[0] : "Profile";
 
   // State for mobile menu toggle (optional)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <header className="bg-darkGrey shadow-md">
-      <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-        {/* Logo or Brand Name */}
-        <div className="text-2xl font-bold text-maroon">
-          {title}
-        </div>
 
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-4">
-          {/* Home Button */}
+    <header className="flex justify-between items-center p-5 bg-gray-100 shadow-md">
+      <div className="text-2xl font-bold">{title}</div>
+      <div className="flex items-center gap-4">
+        {showHome &&
+        <button
+          className="px-4 py-2 font-medium hover:bg-gray-200 rounded"
+          onClick={onHomeClick}
+        >
+          Home
+        </button>
+        }
+
+        {showProfile &&
+        <div className="relative">
           <button
             className="px-4 py-2 font-medium text-white hover:text-accentRed transition-colors duration-200 rounded"
             onClick={onHomeClick}
@@ -127,6 +137,17 @@ const Header = ({
             )}
           </button>
         </div>
+
+        }
+
+        {showCreatePost && (
+          <button
+            className="px-4 py-2 font-medium text-white bg-red-600 hover:bg-red-700 rounded"
+            onClick={onCreatePostClick}
+          >
+            Create Post
+          </button>
+        )}
       </div>
 
       {/* Mobile Navigation Menu */}
