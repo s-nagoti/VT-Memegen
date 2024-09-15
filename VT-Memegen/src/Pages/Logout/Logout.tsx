@@ -10,13 +10,20 @@ const LogoutButton: React.FC = () => {
   const handleLogout = async () => {
     try {
       await logout();
-      navigate('/login')
+      navigate('/login');
     } catch (err) {
       console.error('Failed to logout', err);
     }
   };
 
-  return <button onClick={handleLogout}>Logout</button>;
+  return (
+    <button
+      onClick={handleLogout}
+      className="px-4 py-2 bg-maroon text-white rounded-lg hover:bg-maroon-dark transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-maroon"
+    >
+      Logout
+    </button>
+  );
 };
 
 export default LogoutButton;

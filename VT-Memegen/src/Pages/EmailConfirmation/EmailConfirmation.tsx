@@ -21,14 +21,20 @@ const EmailVerification: React.FC = () => {
   };
 
   return (
-    <div style={{ padding: '1rem', backgroundColor: '#ffdddd', margin: '1rem 0' }}>
-      <p>Your email is not verified. Please verify to access all features.</p>
-      <p>It may take a couple minutes for the email to send. We appologize for the delay</p>
-      <button onClick={handleSendEmail} disabled={sending}>
+    <div className="p-4 bg-red-100 text-red-800 rounded-lg mb-4">
+      <p className="mb-2">Your email is not verified. Please verify to access all features.</p>
+      <p className="mb-4">It may take a couple minutes for the email to send. We apologize for the delay.</p>
+      <button
+        onClick={handleSendEmail}
+        disabled={sending}
+        className={`px-4 py-2 bg-maroon text-white rounded-lg hover:bg-maroon-dark transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-maroon ${
+          sending ? 'opacity-50 cursor-not-allowed' : ''
+        }`}
+      >
         {sending ? 'Sending...' : 'Resend Verification Email'}
       </button>
-      {message && <p style={{ color: 'green' }}>{message}</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {message && <p className="mt-4 text-green-500">{message}</p>}
+      {error && <p className="mt-4 text-red-600">{error}</p>}
     </div>
   );
 };

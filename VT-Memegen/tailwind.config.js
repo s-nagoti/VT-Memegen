@@ -11,7 +11,7 @@ export default {
         darkGrey: '#1f1f1f',
         maroon: '#800000',
         accentRed: '#b22222',
-        maroonDark: '#660000', // Darker shade for hover effects
+        maroonLight: '#993333', // Adjusted to be a bit lighter
       }
     },
   },

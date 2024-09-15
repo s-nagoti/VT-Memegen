@@ -3,14 +3,12 @@ import React, { useState, useRef } from 'react';
 import { collection, addDoc, updateDoc, doc } from 'firebase/firestore';
 import { db, storage } from '../../firebaseConfig';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { imageTemplates, ImageTemplate, TextArea } from '../../Utility/imageTemplates';
+import { imageTemplates, ImageTemplate } from '../../Utility/imageTemplates';
 import html2canvas from 'html2canvas';
-import './AddPost.css'; // Optional: for additional styling
 import Header from '../../Components/Header/Header';
 import { useAuth } from '../../Contexts/AuthContext';
 import { useUser } from '../../Contexts/UserContext';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'
 
 const AddPost: React.FC = () => {
   const [title, setTitle] = useState('');
@@ -22,9 +20,9 @@ const AddPost: React.FC = () => {
   const [createdPostId, setCreatedPostId] = useState<string | null>(null);
   const [textColors, setTextColors] = useState<{ [key: string]: string }>({});
   
-  const {currentUser} = useAuth();
-  const {user} = useUser();
-    const navigate = useNavigate();
+  const { currentUser } = useAuth();
+  const { user } = useUser();
+  const navigate = useNavigate();
   const previewRef = useRef<HTMLDivElement>(null);
 
   // Handle text input changes
@@ -32,7 +30,7 @@ const AddPost: React.FC = () => {
     setTextInputs((prev) => ({ ...prev, [key]: value }));
   };
 
-  const handleColorChange = (key : string, color : string) => {
+  const handleColorChange = (key: string, color: string) => {
     setTextColors(prevColors => ({
       ...prevColors,
       [key]: color,
@@ -71,20 +69,6 @@ const AddPost: React.FC = () => {
         await uploadBytes(storageRef, blob);
         const finalImageUrl = await getDownloadURL(storageRef);
 
-
-      //     // Create FormData and append the image blob
-      // const formData = new FormData();
-      // formData.append('image', blob, `post_${Date.now()}.jpg`); // Optional: provide a filename
-
-      // // Send the image to the backend for explanation
-      // const backendResponse = await axios.post('http://localhost:5000/api/explain-image', formData, {
-      //   headers: {
-      //     'Content-Type': 'multipart/form-data',
-      //   },
-      // });
-
-      // const explanation = backendResponse.data.explanation;
-
         // Add a new document to Firestore
         const docRef = await addDoc(collection(db, 'posts'), {
           title,
@@ -114,150 +98,154 @@ const AddPost: React.FC = () => {
     }
   };
 
-
   const handleGoToPost = () => {
     navigate(`/posts/${createdPostId}`);
   }
 
   return (
-    <div className='flex flex-col min-h-screen'>
-     <Header
-        title="Post Detail"
+    <div className='flex flex-col min-h-screen bg-darkGrey text-white'>
+      <Header
+        title="Create Post"
         email={currentUser?.email ?? "unknown"}
         onHomeClick={() => navigate('/')}
         showCreatePost={false}
-     />
+      />
 
-    <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
-   
-      <h2 className="text-3xl font-bold mb-6 text-center">Create a New Post</h2>
-      
-      {/* Title Input */}
-      <div className="mb-4">
-        <label className="block text-gray-700 mb-2">Title</label>
-        <input
-          type="text"
-          placeholder="Enter post title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-
-      {/* Description Input */}
-      <div className="mb-6">
-        <label className="block text-gray-700 mb-2">Description</label>
-        <textarea
-          placeholder="Enter post description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          rows={4}
-        />
-      </div>
-
-      {/* Image Template Selection */}
-      <div className="mb-6">
-        <h3 className="text-xl font-semibold mb-4">Select an Image Template</h3>
-        <div className="flex space-x-4 overflow-x-auto">
-          {imageTemplates.map((template, index) => (
-            <img
-              key={index}
-              src={template.src}
-              alt={template.alt}
-              className={`w-32 h-32 object-cover rounded-lg cursor-pointer border-4 ${
-                selectedTemplateIndex === index ? 'border-blue-500' : 'border-transparent'
-              } hover:border-blue-300`}
-              onClick={() => setSelectedTemplateIndex(index)}
-            />
-          ))}
+      <div className="max-w-4xl mx-auto p-6 bg-gray-800 rounded-lg shadow-md">
+        <h2 className="text-3xl font-bold mb-6 text-center text-maroon">Create a New Post</h2>
+        
+        {/* Title Input */}
+        <div className="mb-4">
+          <label className="block text-gray-300 mb-2">Title</label>
+          <input
+            type="text"
+            placeholder="Enter post title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-maroon transition-colors"
+          />
         </div>
-      </div>
 
-      {/* Selected Template Preview and Text Inputs */}
-      {selectedTemplateIndex !== null && (
+        {/* Description Input */}
         <div className="mb-6">
-          <h3 className="text-xl font-semibold mb-4">Customize Your Template</h3>
-          <div className="flex flex-col md:flex-row md:space-x-6">
-            {/* Image Preview */}
-            <div className="md:w-1/2 flex justify-center">
-              <div className="relative" ref={previewRef}>
-                <img
-                  src={imageTemplates[selectedTemplateIndex].src}
-                  alt="Selected Template"
-                  className="w-full h-auto rounded-lg shadow-lg"
-                />
-                {/* Overlay Texts */}
-                {imageTemplates[selectedTemplateIndex].textAreas.map((area) => (
-                  <span
-                    key={area.key}
-                    className="absolute text-white font-bold text-center"
-                    style={{
-                      top: area.position.top,
-                      left: area.position.left,
-                      transform: 'translate(-50%, -50%)',
-                      textShadow: '2px 2px 4px rgba(0,0,0,0.7)',
-                      width: '90%', // Adjust as needed
-                      maxWidth: '100px', // Set maximum width for the text box
-                      whiteSpace: 'pre-wrap', // Allow text to wrap
-                      color: textColors[area.key] || 'white', // Use dynamic color
-                      lineHeight: '1'
-                    }}
-                  >
-                    {textInputs[area.key] || ''}
-                  </span>
-                ))}
-              </div>
-            </div>
+          <label className="block text-gray-300 mb-2">Description</label>
+          <textarea
+            placeholder="Enter post description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-maroon transition-colors"
+            rows={4}
+          />
+        </div>
 
-            {/* Text Inputs */}
-            <div className="md:w-1/2">
-              {imageTemplates[selectedTemplateIndex].textAreas.map((area) => (
-                <div key={area.key} className="mb-4">
-                  <label className="block text-gray-700 mb-2">{area.placeholder}</label>
-                  <input
-                    type="text"
-                    placeholder={`Enter ${area.placeholder}`}
-                    value={textInputs[area.key] || ''}
-                    onChange={(e) => handleTextChange(area.key, e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  {/* Color Picker */}
-                  <div className="mt-2 flex items-center">
-                    <label className="text-gray-700 mr-2">Text Color:</label>
-                    <input 
-                      type="color"
-                      value={textColors[area.key] || '#ffffff'}
-                      onChange={(e) => handleColorChange(area.key, e.target.value)}
-                      className="w-10 h-10 p-1 border border-gray-300 rounded-full cursor-pointer"
-                    />
-                </div>
-              </div>
-              ))}
-            </div>
+        {/* Image Template Selection */}
+        <div className="mb-6">
+          <h3 className="text-xl font-semibold mb-4 text-maroon">Select an Image Template</h3>
+          <div className="flex space-x-4 overflow-x-auto">
+            {imageTemplates.map((template, index) => (
+              <img
+                key={index}
+                src={template.src}
+                alt={template.alt}
+                className={`w-32 h-32 object-cover rounded-lg cursor-pointer border-4 ${
+                  selectedTemplateIndex === index ? 'border-maroon' : 'border-transparent'
+                } hover:border-maroonLight transition-colors duration-200`}
+                onClick={() => setSelectedTemplateIndex(index)}
+              />
+            ))}
           </div>
         </div>
-      )}
 
-      {/* Submit Button */}
-      <button
-        onClick={handleAddPost}
-        disabled={loading}
-        className="w-full py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition duration-200 disabled:opacity-50"
-      >
-        {loading ? 'Creating Post...' : 'Create Post'}
-      </button>
+        {/* Selected Template Preview and Text Inputs */}
+        {selectedTemplateIndex !== null && (
+          <div className="mb-6">
+            <h3 className="text-xl font-semibold mb-4 text-maroon">Customize Your Template</h3>
+            <div className="flex flex-col md:flex-row md:space-x-6">
+              {/* Image Preview */}
+              <div className="md:w-1/2 flex justify-center">
+                <div className="relative" ref={previewRef}>
+                  <img
+                    src={imageTemplates[selectedTemplateIndex].src}
+                    alt="Selected Template"
+                    className="w-full h-auto rounded-lg shadow-lg"
+                  />
+                  {/* Overlay Texts */}
+                  {imageTemplates[selectedTemplateIndex].textAreas.map((area) => (
+                    <span
+                      key={area.key}
+                      className="absolute font-bold text-center"
+                      style={{
+                        top: area.position.top,
+                        left: area.position.left,
+                        transform: 'translate(-50%, -50%)',
+                        textShadow: '2px 2px 4px rgba(0,0,0,0.7)',
+                        color: textColors[area.key] || 'white', // Use dynamic color
+                        lineHeight: '1',
+                        maxWidth: 200
+                      }}
+                    >
+                      {textInputs[area.key] || ''}
+                    </span>
+                  ))}
+                </div>
+              </div>
 
-      {/* Feedback Message */}
-      {message && (
-        <p className="mt-4 text-center text-green-500">
-          {message}
-        </p>
-      )}
-       {createdPostId != null && <button onClick={handleGoToPost}>Click here to see your post!</button>}
-
-    </div>
-    </div>
-  );
-}
-  export default AddPost
+              {/* Text Inputs */}
+              <div className="md:w-1/2">
+                {imageTemplates[selectedTemplateIndex].textAreas.map((area) => (
+                  <div key={area.key} className="mb-4">
+                    <label className="block text-gray-300 mb-2">{area.placeholder}</label>
+                    <input
+                      type="text"
+                      placeholder={`Enter ${area.placeholder}`}
+                      value={textInputs[area.key] || ''}
+                      onChange={(e) => handleTextChange(area.key, e.target.value)}
+                      className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-maroon transition-colors"
+                    />
+                    {/* Color Picker */}
+                    <div className="mt-2 flex items-center">
+                      <label className="text-gray-300 mr-2">Text Color:</label>
+                      <input 
+                        type="color"
+                        value={textColors[area.key] || '#ffffff'}
+                        onChange={(e) => handleColorChange(area.key, e.target.value)}
+                        className="w-10 h-10 p-1 border border-gray-600 rounded-full cursor-pointer"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+  
+          {/* Submit Button */}
+          <button
+            onClick={handleAddPost}
+            disabled={loading}
+            className="w-full py-3 bg-maroon text-white font-semibold rounded-lg hover:bg-maroonDark transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? 'Creating Post...' : 'Create Post'}
+          </button>
+  
+          {/* Feedback Message */}
+          {message && (
+            <p className="mt-4 text-center text-green-500">
+              {message}
+            </p>
+          )}
+          
+          {createdPostId != null && (
+            <button 
+              onClick={handleGoToPost} 
+              className="mt-4 w-full py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition duration-200">
+                Click here to see your post!
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  }
+  
+  export default AddPost;
+  
