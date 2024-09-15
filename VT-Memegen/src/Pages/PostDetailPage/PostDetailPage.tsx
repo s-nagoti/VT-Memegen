@@ -277,7 +277,6 @@ const PostDetailPage: React.FC = () => {
       text: commentText.trim(),
       createdAt: new Date(),
     };
-    setComments((prevComments) => [...prevComments, newComment]);
 
     // Clear the comment input field
     setCommentText('');
