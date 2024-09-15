@@ -31,15 +31,15 @@ function App() {
 
   return (
     <div>
-      <Header   
-        title="VT Memegen"
+      <Header
+        title="VT MemeGen"
         email={currentUser?.email ?? "unknown"}
         onHomeClick={handleHomeClick}
         onProfileClick={handleProfileClick}
         onCreatePostClick={handleCreatePostClick}
         showCreatePost={true}
-        />
-        <PostGallery />
+      />
+      <PostGallery />
     </div>
   )
 }

@@ -19,7 +19,7 @@ interface HeaderProps {
 }
 
 const Header = ({
-  title = 'VT Memegen', // Default title
+  title = 'VT MemeGen', // Default title
   email,
   onHomeClick,
   onProfileClick,

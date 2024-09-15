@@ -10,7 +10,7 @@ export interface Post {
     downvotes: string[],
     createdAt: Date,
     authorId: string,
-    category?: string,
+    category?: string[],
     commentsCount: number,
     aiExplenation?: string,
 }
