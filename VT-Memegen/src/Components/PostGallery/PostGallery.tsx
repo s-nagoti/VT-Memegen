@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { collection, getDocs, query, getCountFromServer } from 'firebase/firestore';
 import { db } from '../../firebaseConfig';
@@ -14,6 +15,7 @@ const PostGallery: React.FC = () => {
   const handlePostClick = (postId: string) => {
     navigate(`/posts/${postId}`);
   };
+
 
   const fetchPosts = async () => {
     try {
@@ -83,7 +85,7 @@ const PostGallery: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center h-screen bg-darkGrey text-white">
         <p className="text-xl font-semibold">Loading posts...</p>
       </div>
     );
@@ -141,7 +143,8 @@ const PostGallery: React.FC = () => {
           {filteredPosts.map((post) => (
             <div
               key={post.id}
-              className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300"
+              className="bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300"
+
             >
               <button
                 onClick={() => handlePostClick(post.id)}
@@ -155,13 +158,15 @@ const PostGallery: React.FC = () => {
               </button>
               <div className="p-4">
                 <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
-                <p className="text-gray-700 mb-4">{post.description}</p>
+                <p className="text-gray-400 mb-4">{post.description}</p>
+
                 <div className="flex items-center justify-between">
                   {/* Like, Dislike, and Comment Counts */}
                   <div className="flex items-center space-x-4">
                     <div className="flex items-center text-gray-600">
                       <FaThumbsUp className="mr-1" />
                       <span>{post.upvotes.length}</span>
+
                     </div>
                     <div className="flex items-center text-gray-600">
                       <FaThumbsDown className="mr-1" />

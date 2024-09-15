@@ -80,7 +80,6 @@ const ProfilePage: React.FC = () => {
     fetchUserUpvotes();
   }, [user]);
 
-  // Handle user logout
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -92,7 +91,6 @@ const ProfilePage: React.FC = () => {
     }
   };
 
-  // Handle account deletion
   const handleDeleteAccount = async () => {
     if (!user) return;
 

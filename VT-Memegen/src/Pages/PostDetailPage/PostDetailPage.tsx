@@ -28,10 +28,7 @@ import { FaArrowUp, FaArrowDown, FaSpinner, FaExclamationCircle, FaCheckCircle, 
 import axios from 'axios';
 
 const PostDetailPage: React.FC = () => {
-  // Extract postId from URL parameters
   const { postId } = useParams<{ postId: string }>();
-
-  // Component state
   const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -56,26 +53,16 @@ const PostDetailPage: React.FC = () => {
     const fetchPost = async () => {
       try {
         setLoading(true);
-
-        // Validate postId
         if (typeof postId !== 'string' || postId.trim() === '') {
           throw new Error('Invalid post ID');
         }
-
-        // Reference to the specific post document
         const postRef = doc(db, 'posts', postId);
-
-        // Fetch the document snapshot
         const postSnap = await getDoc(postRef);
-
         if (postSnap.exists()) {
           const postData = postSnap.data();
-
-          // Ensure 'createdAt' is a Firestore Timestamp
           const createdAt = postData.createdAt as Timestamp;
           const authorId = postData.authorId as string;
 
-          // Type assertion: assume postData conforms to Post interface, excluding 'id'
           const postDetails: Post = {
             id: postSnap.id,
             title: postData.title as string,
@@ -87,7 +74,6 @@ const PostDetailPage: React.FC = () => {
             upvotes: postData.upvotes || [],
             downvotes: postData.downvotes || [],
             commentsCount: postData.commentsCount || 0,
-            // include other fields as needed
           };
 
           setPost(postDetails);
@@ -198,21 +184,13 @@ const handleToggleSummary = () => {
       const batch = writeBatch(db);
 
       if (hasUpvoted) {
-        // Remove upvote
-        batch.update(postRef, {
-          upvotes: arrayRemove(user.id),
-        });
+        batch.update(postRef, { upvotes: arrayRemove(user.id) });
       } else {
-        // Add upvote and remove downvote if exists
-        batch.update(postRef, {
-          upvotes: arrayUnion(user.id),
-          downvotes: arrayRemove(user.id),
-        });
+        batch.update(postRef, { upvotes: arrayUnion(user.id), downvotes: arrayRemove(user.id) });
       }
 
       await batch.commit();
 
-      // Optimistically update local state
       setPost((prevPost) => {
         if (!prevPost) return prevPost;
         let newUpvotes = [...prevPost.upvotes];
@@ -228,7 +206,6 @@ const handleToggleSummary = () => {
         return { ...prevPost, upvotes: newUpvotes, downvotes: newDownvotes };
       });
 
-      // Clear any previous errors
       setError(null);
     } catch (err: any) {
       console.error('Error upvoting:', err);
@@ -238,7 +215,6 @@ const handleToggleSummary = () => {
     }
   };
 
-  // Handle Downvote
   const handleDownvote = async () => {
     if (!user || !post) {
       setError('You must be logged in to downvote.');
@@ -256,21 +232,13 @@ const handleToggleSummary = () => {
       const batch = writeBatch(db);
 
       if (hasDownvoted) {
-        // Remove downvote
-        batch.update(postRef, {
-          downvotes: arrayRemove(user.id),
-        });
+        batch.update(postRef, { downvotes: arrayRemove(user.id) });
       } else {
-        // Add downvote and remove upvote if exists
-        batch.update(postRef, {
-          downvotes: arrayUnion(user.id),
-          upvotes: arrayRemove(user.id),
-        });
+        batch.update(postRef, { downvotes: arrayUnion(user.id), upvotes: arrayRemove(user.id) });
       }
 
       await batch.commit();
 
-      // Optimistically update local state
       setPost((prevPost) => {
         if (!prevPost) return prevPost;
         let newDownvotes = [...prevPost.downvotes];
@@ -286,7 +254,6 @@ const handleToggleSummary = () => {
         return { ...prevPost, upvotes: newUpvotes, downvotes: newDownvotes };
       });
 
-      // Clear any previous errors
       setError(null);
     } catch (err: any) {
       console.error('Error downvoting:', err);
