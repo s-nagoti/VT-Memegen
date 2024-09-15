@@ -21,14 +21,24 @@ const AddPost: React.FC = () => {
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [createdPostId, setCreatedPostId] = useState<string | null>(null);
 
-  const { currentUser } = useAuth();
-  const { user } = useUser();
+  const [textColors, setTextColors] = useState<{ [key: string]: string }>({});
+  
+  const {currentUser} = useAuth();
+  const {user} = useUser();
   const navigate = useNavigate();
   const previewRef = useRef<HTMLDivElement>(null);
 
   // Handle text input changes
   const handleTextChange = (key: string, value: string) => {
     setTextInputs((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleColorChange = (key : string, color : string) => {
+    setTextColors(prevColors => ({
+      ...prevColors,
+      [key]: color,
+    }));
+    console.log('Updated Colors:', textColors);
   };
 
   // Handle form submission
@@ -76,6 +86,20 @@ const AddPost: React.FC = () => {
         const storageRef = ref(storage, `posts/${Date.now()}_${selectedTemplateIndex}.jpg`);
         await uploadBytes(storageRef, blob);
         const finalImageUrl = await getDownloadURL(storageRef);
+
+
+      //     // Create FormData and append the image blob
+      // const formData = new FormData();
+      // formData.append('image', blob, `post_${Date.now()}.jpg`); // Optional: provide a filename
+
+      // // Send the image to the backend for explanation
+      // const backendResponse = await axios.post('http://localhost:5000/api/explain-image', formData, {
+      //   headers: {
+      //     'Content-Type': 'multipart/form-data',
+      //   },
+      // });
+
+      // const explanation = backendResponse.data.explanation;
 
         // Add a new document to Firestore
         const docRef = await addDoc(collection(db, 'posts'), {
@@ -180,6 +204,7 @@ const AddPost: React.FC = () => {
             />
           </div>
 
+
           {/* Image Template Selection */}
           <div className="mb-6">
             <h3 className="text-xl font-semibold mb-4 text-gray-800">Select an Image Template</h3>
@@ -197,12 +222,18 @@ const AddPost: React.FC = () => {
                     alt={template.alt}
                     className="w-32 h-32 object-cover rounded-lg"
                   />
-                  {selectedTemplateIndex === index && (
-                    <div className="absolute inset-0 bg-blue-500 bg-opacity-25 rounded-lg flex items-center justify-center">
-                      <FaCheckCircle className="text-white text-2xl" />
-                    </div>
-                  )}
+
+                  {/* Color Picker */}
+                  <div className="mt-2 flex items-center">
+                    <label className="text-gray-700 mr-2">Text Color:</label>
+                    <input 
+                      type="color"
+                      value={textColors[area.key] || '#ffffff'}
+                      onChange={(e) => handleColorChange(area.key, e.target.value)}
+                      className="w-10 h-10 p-1 border border-gray-300 rounded-full cursor-pointer"
+                    />
                 </div>
+              </div>
               ))}
             </div>
           </div>
@@ -294,6 +325,7 @@ const AddPost: React.FC = () => {
           )}
         </div>
       </div>
+
     </div>
   );
 };
