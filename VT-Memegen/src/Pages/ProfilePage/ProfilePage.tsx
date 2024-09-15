@@ -164,6 +164,15 @@ const ProfilePage: React.FC = () => {
         </div>
       )}
 
+ {/* Right Section: Total Likes */}
+ <div className="md:w-1/3 py-10 mt-15 md:mt-0">
+          <h2 className="text-2xl font-semibold mb-4">Your Total Likes</h2>
+          <div className="bg-white shadow-md rounded-lg p-6 flex items-center justify-center">
+            <FaThumbsUp className="text-blue-500 text-4xl mr-4" />
+            <span className="text-4xl font-bold">{user.upvotes}</span>
+          </div>
+        </div>
+
       {/* User's Posts */}
       <div className="mt-8">
         <h2 className="text-2xl font-semibold mb-6">Your Posts</h2>
@@ -194,6 +203,8 @@ const ProfilePage: React.FC = () => {
           </div>
         )}
       </div>
+
+       
     </div>
   );
 };

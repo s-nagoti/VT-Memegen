@@ -109,14 +109,6 @@ const PostGallery: React.FC = () => {
                       <span>{post.downvotes.length}</span>
                     </button>
                   </div>
-                  {/* Comments Button */}
-                  <button
-                    onClick={() => handlePostClick(post.id)}
-                    className="flex items-center text-blue-500 hover:text-blue-600 transition-colors duration-200"
-                    aria-label="Comments"
-                  >
-                    <FaComments className="mr-1" />
-                  </button>
                 </div>
               </div>
             </div>
