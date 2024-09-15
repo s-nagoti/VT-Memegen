@@ -56,6 +56,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       const newUser: User = {
         id: firebaseUser.uid,
         email: email,
+        username: email.split('@')[0],
         bio: '',
         upvotes: 0,
         createdAt: new Date(),

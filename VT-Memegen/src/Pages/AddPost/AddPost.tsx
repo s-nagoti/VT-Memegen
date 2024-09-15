@@ -8,6 +8,7 @@ import html2canvas from 'html2canvas';
 import './AddPost.css'; // Optional: for additional styling
 import Header from '../../Components/Header/Header';
 import { useAuth } from '../../Contexts/AuthContext';
+import { useUser } from '../../Contexts/UserContext';
 import { useNavigate } from 'react-router-dom';
 
 const AddPost: React.FC = () => {
@@ -19,6 +20,7 @@ const AddPost: React.FC = () => {
   const [message, setMessage] = useState('');
   
   const {currentUser} = useAuth();
+  const {user} = useUser();
     const navigate = useNavigate();
   const previewRef = useRef<HTMLDivElement>(null);
 
@@ -65,6 +67,7 @@ const AddPost: React.FC = () => {
           imageUrl: finalImageUrl,
           texts: textInputs, // Store the custom texts
           createdAt: new Date(),
+          authorId: user?.id,
         });
 
         // Update the document to include the generated ID

@@ -3,8 +3,9 @@ import { User } from './User';
 
 export interface Comment {
   id: string;
-  author: User;
+  authorId: string;
+  authorUsername: string,
   text: string;
-  likes: number;
+  likes: string[];
   createdAt: Date; // Firestore timestamp
 }

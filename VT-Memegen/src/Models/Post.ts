@@ -10,5 +10,5 @@ export interface Post {
     downvotes: string[],
     createdAt: Date,
     authorId: string,
-    comments?: Comment[]
+    category?: string,
 }
