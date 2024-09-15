@@ -63,18 +63,18 @@ const AddPost: React.FC = () => {
         const finalImageUrl = await getDownloadURL(storageRef);
 
 
-          // Create FormData and append the image blob
-      const formData = new FormData();
-      formData.append('image', blob, `post_${Date.now()}.jpg`); // Optional: provide a filename
+    //       // Create FormData and append the image blob
+    //   const formData = new FormData();
+    //   formData.append('image', blob, `post_${Date.now()}.jpg`); // Optional: provide a filename
 
-      // Send the image to the backend for explanation
-      const backendResponse = await axios.post('http://localhost:5000/api/explain-image', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+    //   // Send the image to the backend for explanation
+    //   const backendResponse = await axios.post('http://localhost:5000/api/explain-image', formData, {
+    //     headers: {
+    //       'Content-Type': 'multipart/form-data',
+    //     },
+    //   });
 
-      const explanation = backendResponse.data.explanation;
+    //   const explanation = backendResponse.data.explanation;
 
         // Add a new document to Firestore
         const docRef = await addDoc(collection(db, 'posts'), {
@@ -84,7 +84,6 @@ const AddPost: React.FC = () => {
           texts: textInputs, // Store the custom texts
           createdAt: new Date(),
           authorId: user?.id,
-          aiExplanation: explanation,
         });
 
         // Update the document to include the generated ID
