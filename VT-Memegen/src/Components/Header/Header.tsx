@@ -7,6 +7,8 @@ interface HeaderProps {
   onProfileClick?: () => void;
   onCreatePostClick?: () => void;
   showCreatePost?: boolean;
+  showHome?: boolean, 
+  showProfile?: boolean;
 }
 
 const Header = ({
@@ -16,6 +18,8 @@ const Header = ({
   onProfileClick,
   onCreatePostClick,
   showCreatePost,
+  showHome,
+  showProfile
 }: HeaderProps) => {
   // Extract the username from the email
   const username = email ? email.split("@")[0] : "Profile";
@@ -31,36 +35,27 @@ const Header = ({
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-4">
+
           {/* Home Button */}
+          {showHome &&
           <button
             className="px-4 py-2 font-medium text-white hover:text-accentRed transition-colors duration-200 rounded"
             onClick={onHomeClick}
           >
             Home
-          </button>
+          </button>}
 
           {/* Profile Button */}
+          {showProfile &&
           <div className="relative">
             <button
               className="px-4 py-2 font-medium text-white hover:text-accentRed transition-colors duration-200 rounded inline-flex items-center"
               onClick={onProfileClick}
             >
               {username}
-              <svg
-                className="w-4 h-4 ml-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M19 9l-7 7-7-7"
-                ></path>
-              </svg>
+             
             </button>
+            
             {/* Optional Dropdown Menu */}
             {/* 
             <div className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg z-20">
@@ -69,7 +64,7 @@ const Header = ({
               <button className="block px-4 py-2 text-sm text-white hover:bg-maroon">Logout</button>
             </div>
             */}
-          </div>
+          </div>}
 
           {/* Create Post Button */}
           {showCreatePost && (
