@@ -1,75 +1,85 @@
-// PostGallery.tsx
 import React, { useEffect, useState } from 'react';
 import { collection, getDocs, query, getCountFromServer } from 'firebase/firestore';
-import { db } from '../../firebaseConfig'; // Import the Firestore database
+import { db } from '../../firebaseConfig';
 import { useNavigate } from 'react-router-dom';
-import { FaThumbsUp, FaThumbsDown, FaComments } from 'react-icons/fa'; // Import icons from react-icons
-import {Post} from '../../Models/Post'
+import { FaThumbsUp, FaThumbsDown, FaComments } from 'react-icons/fa';
+import { Post } from '../../Models/Post';
 
 const PostGallery: React.FC = () => {
-  // State to hold the list of posts
   const [posts, setPosts] = useState<Post[]>([]);
-  // State to manage the loading state
   const [loading, setLoading] = useState(true);
-
+  const [selectedTags, setSelectedTags] = useState<string[]>([]); // State for selected tags
   const navigate = useNavigate();
 
-  /**
-   * Handles the click event on a post item.
-   * Navigates to the detailed view of the selected post.
-   *
-   * @param postId - The ID of the selected post
-   */
   const handlePostClick = (postId: string) => {
     navigate(`/posts/${postId}`);
   };
 
-  /**
-   * Fetches posts from Firestore when the component mounts.
-   */
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const postsCollection = collection(db, 'posts');
-        const querySnapshot = await getDocs(postsCollection);
-        const fetchedPosts: Post[] = [];
-  
-        // Iterate through each post document
-        for (const docSnap of querySnapshot.docs) {
-          const data = docSnap.data();
-          const postId = docSnap.id; // Use document ID as post ID
-  
-          // Fetch comments count using aggregation query
-          const commentsCollection = collection(db, 'posts', postId, 'comments');
-          const commentsQuery = query(commentsCollection);
-          const commentsCountSnapshot = await getCountFromServer(commentsQuery);
-          const commentsCount = commentsCountSnapshot.data().count;
-  
-          fetchedPosts.push({
-            id: postId,
-            title: data.title,
-            description: data.description,
-            imageUrl: data.imageUrl,
-            texts: data.texts,
-            upvotes: data.upvotes || [],
-            downvotes: data.downvotes || [],
-            createdAt: data.createdAt,
-            authorId: data.authorId,
-            commentsCount, // Add comments count
-          });
-        }
-  
-        setPosts(fetchedPosts);
-      } catch (error) {
-        console.error('Error fetching posts:', error);
-      } finally {
-        setLoading(false);
+  const fetchPosts = async () => {
+    try {
+      const postsCollection = collection(db, 'posts');
+      const querySnapshot = await getDocs(postsCollection);
+      const fetchedPosts: Post[] = [];
+
+      for (const docSnap of querySnapshot.docs) {
+        const data = docSnap.data();
+        const postId = docSnap.id;
+
+        // Fetch comments count using aggregation query
+        const commentsCollection = collection(db, 'posts', postId, 'comments');
+        const commentsQuery = query(commentsCollection);
+        const commentsCountSnapshot = await getCountFromServer(commentsQuery);
+        const commentsCount = commentsCountSnapshot.data().count;
+
+        fetchedPosts.push({
+          id: postId,
+          title: data.title,
+          description: data.description,
+          imageUrl: data.imageUrl,
+          texts: data.texts,
+          upvotes: data.upvotes || [],
+          downvotes: data.downvotes || [],
+          createdAt: data.createdAt,
+          authorId: data.authorId,
+          commentsCount,
+          categories: data.category || [], // Assuming category is an array of tags
+        });
       }
-    };
-  
+
+      setPosts(fetchedPosts);
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchPosts();
   }, []);
-  
+
+  // Handle tag selection
+  const handleTagSelection = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue = event.target.value;
+    if (selectedValue !== 'all' && !selectedTags.includes(selectedValue)) {
+      setSelectedTags([...selectedTags, selectedValue]);
+    }
+  };
+
+  // Remove a tag from the selectedTags array
+  const removeTag = (tag: string) => {
+    setSelectedTags(selectedTags.filter((t) => t !== tag));
+  };
+
+  // Clear all tags
+  const clearAllTags = () => {
+    setSelectedTags([]);
+  };
+
+  // Filter posts based on the selected tags
+  const filteredPosts = selectedTags.length > 0
+    ? posts.filter(post => selectedTags.every(tag => post.categories?.includes(tag)))
+    : posts;
 
   if (loading) {
     return (
@@ -79,17 +89,59 @@ const PostGallery: React.FC = () => {
     );
   }
 
+  // List of available tags including 'Show All'
+  const uniqueTags = ['Housing', 'Classes', 'Dining', 'NightLife', 'Sports'];
+
   return (
     <div className="container mx-auto p-4">
-      <h2 className="text-3xl font-bold mb-6 text-center">Post Gallery</h2>
-      {posts.length === 0 ? (
+      {/* Tag Filter Dropdown */}
+      <div className="flex items-center gap-4 py-6">
+        <select
+          onChange={handleTagSelection}
+          className="px-4 py-3 border rounded text-gray-700"
+          value="" // Always show the placeholder
+        >
+          <option value="" disabled>Select Filter</option>
+          <option value="all">Show All</option>
+          {uniqueTags.map((tag) => (
+            <option key={tag} value={tag}>{tag}</option>
+          ))}
+        </select>
+
+        {/* Display selected tags */}
+        <div className="flex flex-wrap gap-2">
+          {selectedTags.map((tag) => (
+            <div key={tag} className="flex items-center space-x-2 bg-blue-200 text-blue-800 px-2 py-1 rounded-full">
+              <span>{tag}</span>
+              <button
+                className="text-gray-500 hover:text-gray-700"
+                onClick={() => removeTag(tag)}
+              >
+                X
+              </button>
+            </div>
+          ))}
+        </div>
+
+        {/* Clear all tags button */}
+        {selectedTags.length > 0 && (
+          <button
+            className="px-4 py-2 font-medium text-white bg-red-600 hover:bg-red-700 rounded"
+            onClick={clearAllTags}
+          >
+            Clear All
+          </button>
+        )}
+      </div>
+
+      {filteredPosts.length === 0 ? (
         <p className="text-center text-gray-500">No posts available.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {posts.map((post) => (
+          {filteredPosts.map((post) => (
             <div
               key={post.id}
-              className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300"
+              className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300"
             >
               <button
                 onClick={() => handlePostClick(post.id)}
@@ -103,34 +155,29 @@ const PostGallery: React.FC = () => {
               </button>
               <div className="p-4">
                 <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
-                <p className="text-gray-600 mb-4">{post.description}</p>
+                <p className="text-gray-700 mb-4">{post.description}</p>
                 <div className="flex items-center justify-between">
+                  {/* Like, Dislike, and Comment Counts */}
                   <div className="flex items-center space-x-4">
-                    {/* Upvote Button */}
-                    <button
-                      className="flex items-center text-green-500 hover:text-green-600 transition-colors duration-200"
-                      aria-label="Upvote"
-                    >
+                    <div className="flex items-center text-gray-600">
                       <FaThumbsUp className="mr-1" />
                       <span>{post.upvotes.length}</span>
-                    </button>
-                    {/* Downvote Button */}
-                    <button
-                      className="flex items-center text-red-500 hover:text-red-600 transition-colors duration-200"
-                      aria-label="Downvote"
-                    >
+                    </div>
+                    <div className="flex items-center text-gray-600">
                       <FaThumbsDown className="mr-1" />
                       <span>{post.downvotes.length}</span>
-                    </button>
-
-                    <button
-                      className="flex items-center text-red-500 hover:text-red-600 transition-colors duration-200"
-                      aria-label="Downvote"
-                    >
-                      <FaThumbsDown className="mr-1" />
+                    </div>
+                    <div className="flex items-center text-gray-600">
+                      <FaComments className="mr-1" />
                       <span>{post.commentsCount}</span>
-                    </button>
-
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    {post.categories?.map((tag) => (
+                      <span key={tag} className="px-2 py-1 bg-gray-200 text-gray-700 rounded-full text-xs">
+                        {tag}
+                      </span>
+                    ))}
                   </div>
                 </div>
               </div>
