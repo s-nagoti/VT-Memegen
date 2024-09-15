@@ -123,6 +123,24 @@ const ProfilePage: React.FC = () => {
     }
   };
 
+  const handleDelete = async (postId: string) => {
+    if (!user) return;
+
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this post? This action cannot be undone."
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      await deleteDoc(doc(db, "posts", postId));
+      setPosts(posts.filter((post) => post.id !== postId));
+    } catch (err: any) {
+      console.error("Error deleting post:", err);
+      setError(err.message || "Failed to delete post.");
+  }
+};
+
   const handleDeleteAccount = async () => {
     if (!user) return;
 
@@ -228,9 +246,19 @@ const ProfilePage: React.FC = () => {
     iconColor: string;
   }
 
-  const PostGrid: React.FC<PostGridProps> = ({ posts, title, emptyMessage, icon: Icon, iconColor }) => (
-    <div className="flex-1 bg-white p-6 rounded-lg shadow-md border-t-4 border-[#E87722]"> {/* Burnt Orange border */}
-      <h2 className="text-2xl font-bold text-[#861F41] mb-4 flex items-center"> {/* Chicago Maroon text */}
+  const PostGrid: React.FC<PostGridProps> = ({
+    posts,
+    title,
+    emptyMessage,
+    icon: Icon,
+    iconColor,
+  }) => (
+    <div className="flex-1 bg-white p-6 rounded-lg shadow-md border-t-4 border-[#E87722]">
+      {" "}
+      {/* Burnt Orange border */}
+      <h2 className="text-2xl font-bold text-[#861F41] mb-4 flex items-center">
+        {" "}
+        {/* Chicago Maroon text */}
         <Icon className={`${iconColor} mr-2`} />
         {title}
       </h2>
@@ -239,24 +267,61 @@ const ProfilePage: React.FC = () => {
       ) : (
         <div className="grid grid-cols-1 gap-6">
           {posts.map((post) => (
-            <button onClick={() => {navigate(`/posts/${post.id}`)}}>
-            <div key={post.id} className="flex flex-col sm:flex-row bg-gray-50 rounded-lg shadow-sm overflow-hidden transition duration-300 ease-in-out hover:shadow-md hover:bg-[#F1F1F1]">
-              <div className="sm:w-1/3 flex-shrink-0">
-                <img className="h-48 w-full object-cover" src={post.imageUrl || "https://via.placeholder.com/400x200"} alt={post.title} />
-              </div>
-              <div className="flex-1 p-4 flex flex-col justify-between">
-                <div>
-                  <h3 className="text-lg font-semibold text-[#861F41]">{post.title}</h3> {/* Chicago Maroon text */}
-                  <p className="mt-2 text-sm text-gray-600">{post.description}</p>
+            <button
+              onClick={() => {
+                navigate(`/posts/${post.id}`);
+              }}
+            >
+              <div
+                key={post.id}
+                className="flex flex-col sm:flex-row bg-gray-50 rounded-lg shadow-sm overflow-hidden transition duration-300 ease-in-out hover:shadow-md hover:bg-[#F1F1F1]"
+              >
+                <div className="sm:w-1/3 flex-shrink-0">
+                  <img
+                    className="h-48 w-full object-cover"
+                    src={post.imageUrl || "https://via.placeholder.com/400x200"}
+                    alt={post.title}
+                  />
                 </div>
-                <div className="mt-4 flex items-center">
-                  <Icon className={`${iconColor} mr-2`} />
-                  <span className="text-sm font-medium text-[#E87722]"> {/* Burnt Orange text */}
-                    {title === "Your Posts" ? `${post.upvotes.length} upvotes` : "You liked this"}
-                  </span>
+                <div className="flex-1 p-4 flex flex-col justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold text-[#861F41]">
+                      {post.title}
+                    </h3>{" "}
+                    {/* Chicago Maroon text */}
+                    <p className="mt-2 text-sm text-gray-600">
+                      {post.description}
+                    </p>
+                  </div>
+
+                  {/* Bottom Aligned Content */}
+                  <div className="flex items-center justify-between mt-auto">
+                    <div className="flex items-center">
+                      <Icon className={`${iconColor} mr-2`} />
+                      <span className="text-sm font-medium text-[#E87722]">
+                        {" "}
+                        {/* Burnt Orange text */}
+                        {title === "Your Posts"
+                          ? `${post.upvotes.length} upvotes`
+                          : "You liked this"}
+                      </span>
+                    </div>
+
+                    {/* Delete Button */}
+                    { post.authorId === user.id &&
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent navigating to post details
+                        handleDelete(post.id);
+                      }}
+                      className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 transition duration-200"
+                    >
+                      Delete
+                    </button>
+      }
+                  </div>
                 </div>
               </div>
-            </div>
             </button>
           ))}
         </div>
@@ -274,19 +339,26 @@ const ProfilePage: React.FC = () => {
         showCreatePost={true}
       />
 
-<main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* User Information Section */}
-        <section className="bg-white rounded-2xl shadow-lg overflow-hidden mb-8 border-t-4 border-[#E87722]"> {/* Burnt Orange border */}
+        <section className="bg-white rounded-2xl shadow-lg overflow-hidden mb-8 border-t-4 border-[#E87722]">
+          {" "}
+          {/* Burnt Orange border */}
           <div className="md:flex">
             <div className="md:flex-shrink-0">
-              <div className="h-48 w-full md:w-48 bg-gradient-to-br from-[#861F41] to-[#E87722] flex items-center justify-center"> {/* VT color gradient */}
+              <div className="h-48 w-full md:w-48 bg-gradient-to-br from-[#861F41] to-[#E87722] flex items-center justify-center">
+                {" "}
+                {/* VT color gradient */}
                 <span className="text-5xl font-bold text-white">
-                  {user?.username?.charAt(0).toUpperCase() ?? ''}
+                  {user?.username?.charAt(0).toUpperCase() ?? ""}
                 </span>
               </div>
             </div>
             <div className="p-8">
-              <h1 className="text-3xl font-extrabold text-[#861F41] sm:text-4xl">{user.username}</h1> {/* Chicago Maroon text */}
+              <h1 className="text-3xl font-extrabold text-[#861F41] sm:text-4xl">
+                {user.username}
+              </h1>{" "}
+              {/* Chicago Maroon text */}
               <p className="mt-2 text-xl text-gray-500">{user.email}</p>
               <div className="mt-6 flex flex-wrap gap-4">
                 <button
@@ -308,10 +380,17 @@ const ProfilePage: React.FC = () => {
           </div>
           <div className="bg-gray-50 px-4 py-5 sm:p-6">
             <div className="flex items-center">
-              <FaThumbsUp className="text-[#E87722] text-3xl mr-4" /> {/* Burnt Orange icon */}
+              <FaThumbsUp className="text-[#E87722] text-3xl mr-4" />{" "}
+              {/* Burnt Orange icon */}
               <div>
-                <h2 className="text-lg font-medium text-[#861F41]">Total Upvotes</h2> {/* Chicago Maroon text */}
-                <p className="mt-1 text-3xl font-semibold text-[#E87722]">{totalUpvotes}</p> {/* Burnt Orange text */}
+                <h2 className="text-lg font-medium text-[#861F41]">
+                  Total Upvotes
+                </h2>{" "}
+                {/* Chicago Maroon text */}
+                <p className="mt-1 text-3xl font-semibold text-[#E87722]">
+                  {totalUpvotes}
+                </p>{" "}
+                {/* Burnt Orange text */}
               </div>
             </div>
           </div>
@@ -321,8 +400,18 @@ const ProfilePage: React.FC = () => {
           <div className="rounded-md bg-red-50 p-4 mb-8 border-l-4 border-red-400">
             <div className="flex">
               <div className="flex-shrink-0">
-                <svg className="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                <svg
+                  className="h-5 w-5 text-red-400"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                    clipRule="evenodd"
+                  />
                 </svg>
               </div>
               <div className="ml-3">
