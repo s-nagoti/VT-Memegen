@@ -29,8 +29,8 @@ app.post('/api/explain-image', async (req, res) => {
         {
           role: 'user',
           content: [
-            {type: 'text', text: "Please explain this meme as funny as possible"},
-            {type: 'image_url', image_url: {url: 'https://firebasestorage.googleapis.com/v0/b/vthacks12-6ce70.appspot.com/o/posts%2FnpeuDzZMjEYIoygEh74r.jpg?alt=media&token=d960fcc0-258d-4b4e-aad3-c2029ec95a4e'}}
+            {type: 'text', text: "Please explain this meme in detail. Rate it 1 out of 10 for funny."},
+            {type: 'image_url', image_url: {url: imageUrl}}
           ]
         }
       ],

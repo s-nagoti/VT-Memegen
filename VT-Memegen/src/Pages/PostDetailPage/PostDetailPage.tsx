@@ -130,15 +130,15 @@ const PostDetailPage: React.FC = () => {
     setAiSummary(null); // Clear previous summary
     try {
       
-        // const storageRef = ref(
-        //     storage,
-        //     `posts/${post?.id ?? ''}.jpg`
-        //   );  
-        //   const finalImageUrl = await getDownloadURL(storageRef);
+        const storageRef = ref(
+            storage,
+            `posts/${post?.id ?? ''}.jpg`
+          );  
+          const finalImageUrl = await getDownloadURL(storageRef);
           
           // Send the image to the backend for explanation
           const backendResponse = await axios.post('http://localhost:5000/api/explain-image', {
-            imageUrl: 'https://firebasestorage.googleapis.com/v0/b/vthacks12-6ce70.appspot.com/o/posts%2FnpeuDzZMjEYIoygEh74r.jpg?alt=media&token=d960fcc0-258d-4b4e-aad3-c2029ec95a4e', // Send the URL to the backend
+            imageUrl: finalImageUrl, // Send the URL to the backend
         });
   
           const explanation = backendResponse.data.explanation.content
