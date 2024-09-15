@@ -9,7 +9,7 @@ export default {
     extend: {
       colors: {
         darkGrey: '#1f1f1f',
-        maroon: '#800000',
+        maroon: '#bf0000',
         accentRed: '#b22222',
         maroonLight: '#993333', // Adjusted to be a bit lighter
       }
