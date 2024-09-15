@@ -168,7 +168,6 @@ const AddPost: React.FC = () => {
     <div className="flex flex-col min-h-screen bg-gray-50">
       {/* Header */}
       <Header
-        title="Create New Post"
         email={currentUser?.email ?? "unknown"}
         onHomeClick={() => navigate("/")}
         showHome={true}

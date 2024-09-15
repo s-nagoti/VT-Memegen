@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 interface HeaderProps {
   title?: string;
@@ -7,8 +7,6 @@ interface HeaderProps {
   onProfileClick?: () => void;
   onCreatePostClick?: () => void;
   showCreatePost?: boolean;
-  showHome?: boolean;
-  showProfile?: boolean;
 }
 
 const Header = ({
@@ -18,8 +16,6 @@ const Header = ({
   onProfileClick,
   onCreatePostClick,
   showCreatePost,
-  showHome,
-  showProfile,
 }: HeaderProps) => {
   // Extract the username from the email
   const username = email ? email.split("@")[0] : "Profile";
@@ -28,19 +24,22 @@ const Header = ({
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <header className="flex justify-between items-center p-5 bg-gray-100 shadow-md">
-      <div className="text-2xl font-bold">{title}</div>
-      <div className="flex items-center gap-4">
-        {showHome && (
+    <header className="bg-darkGrey shadow-md">
+      <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+        {/* Logo or Brand Name */}
+        <div className="text-2xl font-bold text-maroon">{title}</div>
+
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex items-center gap-4">
+          {/* Home Button */}
           <button
-            className="px-4 py-2 font-medium hover:bg-gray-200 rounded"
+            className="px-4 py-2 font-medium text-white hover:text-accentRed transition-colors duration-200 rounded"
             onClick={onHomeClick}
           >
             Home
           </button>
-        )}
 
-        {showProfile && (
+          {/* Profile Button */}
           <div className="relative">
             <button
               className="px-4 py-2 font-medium text-white hover:text-accentRed transition-colors duration-200 rounded inline-flex items-center"
@@ -71,17 +70,17 @@ const Header = ({
             </div>
             */}
           </div>
-        )}
 
-        {/* Create Post Button */}
-        {showCreatePost && (
-          <button
-            className="px-4 py-2 font-medium text-white bg-maroon hover:bg-maroonDark transition-colors duration-200 rounded"
-            onClick={onCreatePostClick}
-          >
-            Create Post
-          </button>
-        )}
+          {/* Create Post Button */}
+          {showCreatePost && (
+            <button
+              className="px-4 py-2 font-medium text-white bg-maroon hover:bg-maroonDark transition-colors duration-200 rounded"
+              onClick={onCreatePostClick}
+            >
+              Create Post
+            </button>
+          )}
+        </div>
 
         {/* Mobile Menu Button */}
         <div className="md:hidden">
@@ -129,47 +128,29 @@ const Header = ({
 
       {/* Mobile Navigation Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-darkGrey px-4 pb-4 mt-2 rounded-lg shadow-lg">
+        <div className="md:hidden bg-darkGrey px-4 pb-4">
           <div className="flex flex-col items-start gap-2">
             {/* Home Button */}
-            {showHome && (
-              <button
-                className="w-full text-left px-4 py-2 font-medium text-white hover:text-accentRed transition-colors duration-200 rounded"
-                onClick={() => {
-                  onHomeClick && onHomeClick();
-                  setIsMobileMenuOpen(false);
-                }}
-              >
-                Home
-              </button>
-            )}
+            <button
+              className="w-full text-left px-4 py-2 font-medium text-white hover:text-accentRed transition-colors duration-200 rounded"
+              onClick={() => {
+                onHomeClick && onHomeClick();
+                setIsMobileMenuOpen(false);
+              }}
+            >
+              Home
+            </button>
 
             {/* Profile Button */}
-            {showProfile && (
-              <button
-                className="w-full text-left px-4 py-2 font-medium text-white hover:text-accentRed transition-colors duration-200 rounded inline-flex items-center"
-                onClick={() => {
-                  onProfileClick && onProfileClick();
-                  setIsMobileMenuOpen(false);
-                }}
-              >
-                {username}
-                <svg
-                  className="w-4 h-4 ml-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M19 9l-7 7-7-7"
-                  ></path>
-                </svg>
-              </button>
-            )}
+            <button
+              className="w-full text-left px-4 py-2 font-medium text-white hover:text-accentRed transition-colors duration-200 rounded inline-flex items-center"
+              onClick={() => {
+                onProfileClick && onProfileClick();
+                setIsMobileMenuOpen(false);
+              }}
+            >
+              {username}
+            </button>
 
             {/* Create Post Button */}
             {showCreatePost && (
