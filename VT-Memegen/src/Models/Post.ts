@@ -12,4 +12,5 @@ export interface Post {
     authorId: string,
     category?: string,
     commentsCount: number,
+    aiExplenation?: string,
 }
