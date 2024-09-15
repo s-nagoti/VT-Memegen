@@ -165,6 +165,9 @@ const AddPost: React.FC = () => {
                       transform: 'translate(-50%, -50%)',
                       textShadow: '2px 2px 4px rgba(0,0,0,0.7)',
                       width: '90%', // Adjust as needed
+                      maxWidth: '100px', // Set maximum width for the text box
+                      whiteSpace: 'pre-wrap', // Allow text to wrap
+                      lineHeight: '1'
                     }}
                   >
                     {textInputs[area.key] || ''}
