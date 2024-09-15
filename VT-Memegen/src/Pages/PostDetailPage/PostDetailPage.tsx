@@ -16,14 +16,16 @@ import {
   onSnapshot,
   orderBy,
 } from 'firebase/firestore';
-import { db } from '../../firebaseConfig';
+import { ref, getDownloadURL,} from 'firebase/storage';
+import { db, storage } from '../../firebaseConfig';
 import { useAuth } from '../../Contexts/AuthContext';
 import { useUser } from '../../Contexts/UserContext';
 import { Post } from '../../Models/Post';
 import { Comment } from '../../Models/Comment';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../Components/Header/Header';
-import { FaArrowUp, FaArrowDown, FaSpinner, FaExclamationCircle, FaCheckCircle } from 'react-icons/fa';
+import { FaArrowUp, FaArrowDown, FaSpinner, FaExclamationCircle, FaCheckCircle, FaBrain } from 'react-icons/fa';
+import axios from 'axios';
 
 const PostDetailPage: React.FC = () => {
   // Extract postId from URL parameters
@@ -37,6 +39,11 @@ const PostDetailPage: React.FC = () => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [commentLoading, setCommentLoading] = useState<boolean>(false);
   const [voteLoading, setVoteLoading] = useState<boolean>(false);
+  const [summaryExpanded, setSummaryExpanded] = useState(false); // State to toggle summary
+  const [loadingSummary, setLoadingSummary] = useState(false); // State for loading spinner
+  const [aiSummary, setAiSummary] = useState<string | null>(null); // State for storing AI summary
+
+
 
   const navigate = useNavigate();
 
@@ -130,6 +137,48 @@ const PostDetailPage: React.FC = () => {
 
     return () => unsubscribe(); // Cleanup on unmount or postId change
   }, [postId]);
+
+  // Mock function to simulate API call to backend
+  const generateAISummary = async () => {
+    setLoadingSummary(true);
+    setAiSummary(null); // Clear previous summary
+    try {
+      
+        // const storageRef = ref(
+        //     storage,
+        //     `posts/${post?.id ?? ''}.jpg`
+        //   );  
+        //   const finalImageUrl = await getDownloadURL(storageRef);
+          
+          // Send the image to the backend for explanation
+          const backendResponse = await axios.post('http://localhost:5000/api/explain-image', {
+            imageUrl: 'https://firebasestorage.googleapis.com/v0/b/vthacks12-6ce70.appspot.com/o/posts%2FnpeuDzZMjEYIoygEh74r.jpg?alt=media&token=d960fcc0-258d-4b4e-aad3-c2029ec95a4e', // Send the URL to the backend
+        });
+  
+          const explanation = backendResponse.data.explanation.content
+
+        // Replace this with actual API call to your backend
+        // const response = await axios.post('/api/generate-summary', { title, description });
+        setAiSummary(explanation || 'No explanation found.');
+
+        
+    } catch (error) {
+        console.error("Error generating AI summary:", error);
+        setAiSummary("Failed to generate summary. Please try again.");
+    } finally {
+        setLoadingSummary(false);
+    }
+};
+
+// Toggle summary section
+const handleToggleSummary = () => {
+    if (!summaryExpanded) {
+        generateAISummary();
+    }
+    setSummaryExpanded((prev) => !prev);
+};
+
+
 
   // Handle Upvote
   const handleUpvote = async () => {
@@ -282,8 +331,6 @@ const PostDetailPage: React.FC = () => {
         createdAt: new Date(),
       };
 
-      setComments((prevComments) => [...prevComments, newComment]);
-
       // Clear the comment input field
       setCommentText('');
 
@@ -337,6 +384,7 @@ const PostDetailPage: React.FC = () => {
       <Header 
       email={user?.email || ''}
       onHomeClick={() => navigate('/')}
+      onProfileClick={() => navigate('/profile-page')}
       showHome={true}
       showProfile={true} />
 
@@ -388,8 +436,35 @@ const PostDetailPage: React.FC = () => {
           </div>
         </div>
 
+           {/* AI Summarize Button and Section */}
+           <div className="mb-6 py-5">
+                        <button
+                            onClick={handleToggleSummary}
+                            className="w-full py-3 text-white font-semibold rounded-lg bg-indigo-600 hover:bg-indigo-700 transition duration-200 flex items-center justify-center space-x-2"
+                        >
+                            <FaBrain className="w-5 h-5" />
+                            <span>AI Summarize</span>
+                        </button>
+                        {summaryExpanded && (
+                            <div className="mt-4 p-4 border border-gray-300 rounded-lg bg-gray-100">
+                                {/* AI Summary Loading */}
+                                {loadingSummary ? (
+                                    <div className="flex items-center space-x-2">
+                                        <FaSpinner className="animate-spin w-5 h-5 text-indigo-600" />
+                                        <span>Generating summary...</span>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <h3 className="text-lg font-semibold mb-2">AI Generated Summary:</h3>
+                                        <p className="text-gray-800">{aiSummary}</p>
+                                    </>
+                                )}
+                            </div>
+                        )}
+                    </div>
+
         {/* Comments Section */}
-        <div className="mt-8 bg-white p-6 rounded-lg shadow-md">
+        <div className="mt-8 bg-white p-3 rounded-lg shadow-md">
           <h3 className="text-xl font-semibold text-gray-800 mb-4">Comments</h3>
 
           {/* Add Comment Form */}

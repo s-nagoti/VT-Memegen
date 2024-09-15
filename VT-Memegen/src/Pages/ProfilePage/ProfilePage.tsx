@@ -281,7 +281,7 @@ const ProfilePage: React.FC = () => {
                     <p className="text-gray-600 mb-4">{post.description}</p>
                     <div className="flex items-center">
                       <FaThumbsUp className="text-blue-500 mr-2" />
-                      <span className="text-gray-700">{post.upvotes}</span>
+                      <span className="text-gray-700">{post.upvotes.length}</span>
                     </div>
                   </div>
                 </div>

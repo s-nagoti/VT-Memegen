@@ -17,6 +17,7 @@ import { useAuth } from "../../Contexts/AuthContext";
 import { useUser } from "../../Contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import { FaSpinner, FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
+import axios from "axios";
 
 const AddPost: React.FC = () => {
   const [title, setTitle] = useState("");
@@ -33,11 +34,14 @@ const AddPost: React.FC = () => {
   const [createdPostId, setCreatedPostId] = useState<string | null>(null);
 
   const [textColors, setTextColors] = useState<{ [key: string]: string }>({});
+  const [selectedTags, setSelectedTags] = useState<string[]>([]); // New state for tags
 
   const { currentUser } = useAuth();
   const { user } = useUser();
   const navigate = useNavigate();
   const previewRef = useRef<HTMLDivElement>(null);
+
+  const tags = ["Dorms", "Classes", "Dining Halls", "Night Life", "Sports"]; // Tag options
 
   // Handle text input changes
   const handleTextChange = (key: string, value: string) => {
@@ -97,39 +101,29 @@ const AddPost: React.FC = () => {
         );
         if (!blob) throw new Error("Failed to generate image");
 
-        // Upload the image to Firebase Storage
-        const storageRef = ref(
-          storage,
-          `posts/${Date.now()}_${selectedTemplateIndex}.jpg`
-        );
-        await uploadBytes(storageRef, blob);
-        const finalImageUrl = await getDownloadURL(storageRef);
-
-        //     // Create FormData and append the image blob
-        // const formData = new FormData();
-        // formData.append('image', blob, `post_${Date.now()}.jpg`); // Optional: provide a filename
-
-        // // Send the image to the backend for explanation
-        // const backendResponse = await axios.post('http://localhost:5000/api/explain-image', formData, {
-        //   headers: {
-        //     'Content-Type': 'multipart/form-data',
-        //   },
-        // });
-
-        // const explanation = backendResponse.data.explanation;
 
         // Add a new document to Firestore
         const docRef = await addDoc(collection(db, "posts"), {
           title: title.trim(),
           description: description.trim(),
-          imageUrl: finalImageUrl,
           texts: textInputs, // Store the custom texts
           createdAt: new Date(),
           authorId: user?.id ?? "",
+          categories: selectedTags,
         });
 
+         // Upload the image to Firebase Storage
+         const storageRef = ref(
+            storage,
+            `posts/${docRef.id}.jpg`
+          );
+          await uploadBytes(storageRef, blob);
+          const finalImageUrl = await getDownloadURL(storageRef);
+
         // Update the document to include the generated ID
-        await updateDoc(doc(db, "posts", docRef.id), { id: docRef.id });
+        await updateDoc(doc(db, "posts", docRef.id), { id: docRef.id, imageUrl: finalImageUrl, 
+        });
+        
 
         // Update user's posts array
         if (user?.id) {
@@ -156,6 +150,14 @@ const AddPost: React.FC = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleTagChange = (tag: string) => {
+    setSelectedTags((prevTags) =>
+      prevTags.includes(tag)
+        ? prevTags.filter((t) => t !== tag)
+        : [...prevTags, tag]
+    );
   };
 
   const handleGoToPost = () => {
@@ -233,6 +235,24 @@ const AddPost: React.FC = () => {
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
               rows={4}
             />
+          </div>
+
+          {/* Tag Selection */}
+          <div className="mb-6">
+            <h3 className="text-xl font-semibold mb-4">Select Tags</h3>
+            <div className="flex flex-wrap gap-2">
+              {tags.map((tag) => (
+                <label key={tag} className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={selectedTags.includes(tag)}
+                    onChange={() => handleTagChange(tag)}
+                    className="mr-2"
+                  />
+                  {tag}
+                </label>
+              ))}
+            </div>
           </div>
 
           {/* Image Template Selection */}
