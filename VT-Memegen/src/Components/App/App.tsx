@@ -1,11 +1,7 @@
-import { useState } from 'react'
-import Register from '../../Pages/Register/Register'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { useAuth } from '../../Contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import Header from '../Header/Header'
 import PostGallery from '../PostGallery/PostGallery'
-import PostDetailPage from '../../Pages/PostDetailPage/PostDetailPage'
 import './App.css'
 
 function App() {

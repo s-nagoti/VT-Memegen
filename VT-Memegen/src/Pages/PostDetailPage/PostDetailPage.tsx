@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import {
   doc,
   getDoc,
-  updateDoc,
   collection,
   addDoc,
   arrayUnion,
@@ -16,7 +15,6 @@ import {
 } from "firebase/firestore";
 import { ref, getDownloadURL } from "firebase/storage";
 import { db, storage } from "../../firebaseConfig";
-import { useAuth } from "../../Contexts/AuthContext";
 import { useUser } from "../../Contexts/UserContext";
 import { Post } from "../../Models/Post";
 import { Comment } from "../../Models/Comment";
@@ -50,7 +48,6 @@ const PostDetailPage: React.FC = () => {
   const navigate = useNavigate();
 
   const { user } = useUser();
-  const { currentUser } = useAuth();
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -197,9 +194,7 @@ const PostDetailPage: React.FC = () => {
     setVoteLoading(true);
     try {
       const postRef = doc(db, "posts", post.id);
-      const downvotes = post.downvotes as string[];
       const upvotes = post.upvotes as string[];
-      const hasDownvoted = downvotes.includes(user.id);
       const hasUpvoted = upvotes.includes(user.id);
 
       const batch = writeBatch(db);
@@ -255,9 +250,7 @@ const PostDetailPage: React.FC = () => {
     try {
       const postRef = doc(db, "posts", post.id);
       const downvotes = post.downvotes as string[];
-      const upvotes = post.upvotes as string[];
       const hasDownvoted = downvotes.includes(user.id);
-      const hasUpvoted = upvotes.includes(user.id);
 
       const batch = writeBatch(db);
 
@@ -313,7 +306,7 @@ const PostDetailPage: React.FC = () => {
     setCommentLoading(true);
     try {
       const commentsRef = collection(db, "posts", postId!, "comments");
-      const docRef = await addDoc(commentsRef, {
+      await addDoc(commentsRef, {
         authorId: user.id,
         authorUsername: user.username ?? "",
         text: commentText.trim(),
@@ -321,15 +314,6 @@ const PostDetailPage: React.FC = () => {
         likes: [],
       });
 
-      // Optionally, update local state optimistically
-      const newComment: Comment = {
-        id: docRef.id,
-        authorId: user.id,
-        authorUsername: user.username ?? "",
-        likes: [],
-        text: commentText.trim(),
-        createdAt: new Date(),
-      };
 
       setCommentText("");
       setError(null);

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../../Contexts/AuthContext';
 
 const EmailVerification: React.FC = () => {
-  const { sendVerificationEmail, currentUser } = useAuth();
+  const { sendVerificationEmail } = useAuth();
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [sending, setSending] = useState<boolean>(false);

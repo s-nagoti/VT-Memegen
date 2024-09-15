@@ -1,7 +1,6 @@
 // src/components/Register.tsx
 import React, { useState, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../Contexts/AuthContext';
 import { useUser } from '../../Contexts/UserContext';
 
 const Register: React.FC = () => {
@@ -10,7 +9,6 @@ const Register: React.FC = () => {
   const [password, setPassword] = useState('');
 
   const [error, setError] = useState<string | null>(null);
-  const { sendVerificationEmail } = useAuth();
   const { register } = useUser();
   const navigate = useNavigate();
 
@@ -31,7 +29,7 @@ const Register: React.FC = () => {
       }else{
         setError('Please use a valid VT email');
       }
-      
+
       setLoading(false);
       navigate('/email-confirmation');
     } catch (err: any) {

@@ -28,7 +28,7 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [isEmailVerified, setIsEmailVerified] = useState<boolean>(false);
+  const [isEmailVerified] = useState<boolean>(false);
 
 
   useEffect(() => {

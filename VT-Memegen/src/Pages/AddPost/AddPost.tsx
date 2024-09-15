@@ -15,7 +15,6 @@ import { useAuth } from "../../Contexts/AuthContext";
 import { useUser } from "../../Contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import { FaSpinner, FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
-import axios from "axios";
 
 const AddPost: React.FC = () => {
   const [title, setTitle] = useState("");
@@ -76,7 +75,7 @@ const AddPost: React.FC = () => {
 
     const selectedTemplate: ImageTemplate =
       imageTemplates[selectedTemplateIndex];
-    const { src: imageUrl, textAreas } = selectedTemplate;
+    const { textAreas } = selectedTemplate;
 
     // Validate text inputs
     for (let area of textAreas) {
