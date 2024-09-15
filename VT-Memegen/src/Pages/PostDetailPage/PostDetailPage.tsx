@@ -1,5 +1,3 @@
-// src/components/PostDetailPage.tsx
-
 import React, { useEffect, useState, FormEvent } from "react";
 import { useParams } from "react-router-dom";
 import {
@@ -29,12 +27,11 @@ import {
   FaArrowDown,
   FaSpinner,
   FaExclamationCircle,
-  FaCheckCircle,
   FaBrain,
 } from "react-icons/fa";
 import axios from "axios";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
 
 const PostDetailPage: React.FC = () => {
   const { postId } = useParams<{ postId: string }>();
@@ -45,19 +42,16 @@ const PostDetailPage: React.FC = () => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [commentLoading, setCommentLoading] = useState<boolean>(false);
   const [voteLoading, setVoteLoading] = useState<boolean>(false);
-  const [summaryExpanded, setSummaryExpanded] = useState(false); // State to toggle summary
-  const [loadingSummary, setLoadingSummary] = useState(false); // State for loading spinner
-  const [aiSummary, setAiSummary] = useState<string | null>(null); // State for storing AI summary
+  const [summaryExpanded, setSummaryExpanded] = useState(false);
+  const [loadingSummary, setLoadingSummary] = useState(false);
+  const [aiSummary, setAiSummary] = useState<string | null>(null);
   const [commentLikeLoading, setCommentLikeLoading] = useState(false);
-  const [commentLikeError, setCommentLikeError] = useState(null);
   
   const navigate = useNavigate();
 
-  // Contexts
-  const { user } = useUser(); // Assuming user contains user.id and user.username
-  const { currentUser } = useAuth(); // If needed
+  const { user } = useUser();
+  const { currentUser } = useAuth();
 
-  // Fetch post data
   useEffect(() => {
     const fetchPost = async () => {
       try {
@@ -100,7 +94,6 @@ const PostDetailPage: React.FC = () => {
     fetchPost();
   }, [postId]);
 
-  // Fetch comments in real-time
   useEffect(() => {
     if (!postId) return;
 
@@ -130,12 +123,10 @@ const PostDetailPage: React.FC = () => {
       }
     );
 
-    return () => unsubscribe(); // Cleanup on unmount or postId change
+    return () => unsubscribe();
   }, [postId]);
 
-
-   // Handle Like
-   const handleCommentLike = async (comment: Comment) => {
+  const handleCommentLike = async (comment: Comment) => {
     if (!user || !comment) {
       setError("You must be logged in to like.");
       return;
@@ -143,16 +134,16 @@ const PostDetailPage: React.FC = () => {
 
     setCommentLikeLoading(true);
     try {
-      const commentRef = doc(db,"posts", post?.id ?? '', "comments", comment.id);
+      const commentRef = doc(db, "posts", post?.id ?? "", "comments", comment.id);
       const likes = comment.likes || [];
-      const hasLiked = likes.includes(user?.id ?? '');
+      const hasLiked = likes.includes(user?.id ?? "");
 
       const batch = writeBatch(db);
 
       if (hasLiked) {
-        batch.update(commentRef, { likes: arrayRemove(user?.id ?? '') });
+        batch.update(commentRef, { likes: arrayRemove(user?.id ?? "") });
       } else {
-        batch.update(commentRef, { likes: arrayUnion(user?.id ?? '') });
+        batch.update(commentRef, { likes: arrayUnion(user?.id ?? "") });
       }
 
       await batch.commit();
@@ -166,26 +157,21 @@ const PostDetailPage: React.FC = () => {
     }
   };
 
-  // Mock function to simulate API call to backend
   const generateAISummary = async () => {
     setLoadingSummary(true);
-    setAiSummary(null); // Clear previous summary
+    setAiSummary(null);
     try {
       const storageRef = ref(storage, `posts/${post?.id ?? ""}.jpg`);
       const finalImageUrl = await getDownloadURL(storageRef);
 
-      // Send the image to the backend for explanation
       const backendResponse = await axios.post(
         "http://localhost:5000/api/explain-image",
         {
-          imageUrl: finalImageUrl, // Send the URL to the backend
+          imageUrl: finalImageUrl,
         }
       );
 
       const explanation = backendResponse.data.explanation.content;
-
-      // Replace this with actual API call to your backend
-      // const response = await axios.post('/api/generate-summary', { title, description });
       setAiSummary(explanation || "No explanation found.");
     } catch (error) {
       console.error("Error generating AI summary:", error);
@@ -195,7 +181,6 @@ const PostDetailPage: React.FC = () => {
     }
   };
 
-  // Toggle summary section
   const handleToggleSummary = () => {
     if (!summaryExpanded) {
       generateAISummary();
@@ -203,7 +188,6 @@ const PostDetailPage: React.FC = () => {
     setSummaryExpanded((prev) => !prev);
   };
 
-  // Handle Upvote
   const handleUpvote = async () => {
     if (!user || !post) {
       setError("You must be logged in to upvote.");
@@ -224,7 +208,7 @@ const PostDetailPage: React.FC = () => {
         batch.update(postRef, { upvotes: arrayRemove(user.id) });
         batch.update(doc(db, "users", user?.id ?? ""), {
           likedPosts: arrayRemove(post.id),
-        })
+        });
       } else {
         batch.update(postRef, {
           upvotes: arrayUnion(user.id),
@@ -232,7 +216,7 @@ const PostDetailPage: React.FC = () => {
         });
         batch.update(doc(db, "users", user?.id ?? ""), {
           likedPosts: arrayUnion(post.id),
-        })
+        });
       }
 
       await batch.commit();
@@ -297,7 +281,7 @@ const PostDetailPage: React.FC = () => {
           newDownvotes = newDownvotes.filter((id) => id !== user.id);
         } else {
           newDownvotes.push(user.id);
-          newUpvotes = newUpvotes.filter((id) => id !== user.id);
+          newUpvotes = newUpvotes.filter((id          ) => id !== user.id);
         }
 
         return { ...prevPost, upvotes: newUpvotes, downvotes: newDownvotes };
@@ -347,10 +331,7 @@ const PostDetailPage: React.FC = () => {
         createdAt: new Date(),
       };
 
-      // Clear the comment input field
       setCommentText("");
-
-      // Clear any existing errors
       setError(null);
     } catch (error) {
       console.error("Error adding comment:", error);
@@ -363,9 +344,9 @@ const PostDetailPage: React.FC = () => {
   // Render Loading State
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <FaSpinner className="animate-spin text-4xl text-blue-500" />
-        <span className="ml-2 text-xl text-gray-700">Loading post...</span>
+      <div className="flex items-center justify-center min-h-screen bg-charcoal text-white">
+        <FaSpinner className="animate-spin text-4xl text-accentRed" />
+        <span className="ml-2 text-xl">Loading post...</span>
       </div>
     );
   }
@@ -373,7 +354,7 @@ const PostDetailPage: React.FC = () => {
   // Render Error State
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="flex items-center justify-center min-h-screen bg-charcoal text-white">
         <div className="flex items-center bg-red-100 text-red-700 px-6 py-4 rounded-lg">
           <FaExclamationCircle className="w-6 h-6 mr-3" />
           <span>{error}</span>
@@ -385,7 +366,7 @@ const PostDetailPage: React.FC = () => {
   // Render Not Found State
   if (!post) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="flex items-center justify-center min-h-screen bg-charcoal text-white">
         <div className="flex items-center bg-yellow-100 text-yellow-700 px-6 py-4 rounded-lg">
           <FaExclamationCircle className="w-6 h-6 mr-3" />
           <span>Post not found.</span>
@@ -395,7 +376,7 @@ const PostDetailPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-charcoal">
       {/* Header */}
       <Header
         email={user?.email || ""}
@@ -408,7 +389,7 @@ const PostDetailPage: React.FC = () => {
       {/* Main Content */}
       <div className="container mx-auto p-6">
         {/* Post Container */}
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
+        <div className="bg-darkGrey rounded-lg shadow-md overflow-hidden">
           <div className="flex flex-col md:flex-row">
             {/* Image Section */}
             <div className="md:w-1/2">
@@ -421,10 +402,10 @@ const PostDetailPage: React.FC = () => {
             {/* Content Section */}
             <div className="md:w-1/2 p-6 flex flex-col justify-between">
               <div>
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                <h2 className="text-2xl font-bold text-white mb-4">
                   {post.title}
                 </h2>
-                <p className="text-gray-700">{post.description}</p>
+                <p className="text-lightGray">{post.description}</p>
               </div>
               {/* Upvote/Downvote Section */}
               <div className="mt-6 flex items-center space-x-6">
@@ -432,24 +413,24 @@ const PostDetailPage: React.FC = () => {
                 <button
                   onClick={handleUpvote}
                   disabled={voteLoading}
-                  className={`flex items-center space-x-2 text-gray-700 hover:text-blue-600 transition-colors duration-200 ${
+                  className={`flex items-center space-x-2 text-lightGray hover:text-maroon transition-colors duration-200 ${
                     post.upvotes.includes(user?.id || "") ? "font-semibold" : ""
                   }`}
                 >
-                  <FaArrowUp className="w-5 h-5" color={post.upvotes.includes(user?.id ?? "") ? 'red' : 'black'} />
+                  <FaArrowUp className="w-5 h-5" />
                   <span>{post.upvotes.length}</span>
                 </button>
                 {/* Downvote Button */}
                 <button
                   onClick={handleDownvote}
                   disabled={voteLoading}
-                  className={`flex items-center space-x-2 text-gray-700 hover:text-red-600 transition-colors duration-200 ${
+                  className={`flex items-center space-x-2 text-lightGray hover:text-maroon transition-colors duration-200 ${
                     post.downvotes.includes(user?.id || "")
                       ? "font-semibold"
                       : ""
                   }`}
                 >
-                  <FaArrowDown className="w-5 h-5" color={post.downvotes.includes(user?.id ?? "") ? 'red' : 'black'}/>
+                  <FaArrowDown className="w-5 h-5" />
                   <span>{post.downvotes.length}</span>
                 </button>
               </div>
@@ -461,25 +442,25 @@ const PostDetailPage: React.FC = () => {
         <div className="mb-6 py-5">
           <button
             onClick={handleToggleSummary}
-            className="w-full py-3 text-white font-semibold rounded-lg bg-indigo-600 hover:bg-indigo-700 transition duration-200 flex items-center justify-center space-x-2"
+            className="w-full py-3 text-white font-semibold rounded-lg bg-maroon hover:bg-maroonLight transition duration-200 flex items-center justify-center space-x-2"
           >
             <FaBrain className="w-5 h-5" />
             <span>AI Summarize</span>
           </button>
           {summaryExpanded && (
-            <div className="mt-4 p-4 border border-gray-300 rounded-lg bg-gray-100">
+            <div className="mt-4 p-4 border border-gray-300 rounded-lg bg-darkGrey">
               {/* AI Summary Loading */}
               {loadingSummary ? (
                 <div className="flex items-center space-x-2">
-                  <FaSpinner className="animate-spin w-5 h-5 text-indigo-600" />
-                  <span>Generating summary...</span>
+                  <FaSpinner className="animate-spin w-5 h-5 text-maroon" />
+                  <span className="text-lightGray">Generating summary...</span>
                 </div>
               ) : (
                 <>
-                  <h3 className="text-lg font-semibold mb-2">
+                  <h3 className="text-lg font-semibold mb-2 text-lightGray">
                     AI Generated Summary:
                   </h3>
-                  <p className="text-gray-800">{aiSummary}</p>
+                  <p className="text-lightGray">{aiSummary}</p>
                 </>
               )}
             </div>
@@ -487,8 +468,8 @@ const PostDetailPage: React.FC = () => {
         </div>
 
         {/* Comments Section */}
-        <div className="mt-8 bg-white p-3 rounded-lg shadow-md">
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">Comments</h3>
+        <div className="mt-8 bg-darkGrey p-3 rounded-lg shadow-md">
+          <h3 className="text-xl font-semibold text-white mb-4">Comments</h3>
 
           {/* Add Comment Form */}
           <form onSubmit={handleAddComment} className="mb-6">
@@ -496,14 +477,14 @@ const PostDetailPage: React.FC = () => {
               value={commentText}
               onChange={(e) => setCommentText(e.target.value)}
               placeholder="Add a comment..."
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              className="w-full px-4 py-3 border border-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-maroon resize-none bg-gray-700 text-white"
               rows={3}
               required
             ></textarea>
             <button
               type="submit"
               disabled={commentLoading || !commentText.trim()}
-              className={`mt-2 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+              className={`mt-2 px-4 py-2 bg-maroon text-white font-semibold rounded-lg hover:bg-maroonLight transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-maroon ${
                 !commentText.trim() || commentLoading
                   ? "opacity-50 cursor-not-allowed"
                   : ""
@@ -528,32 +509,38 @@ const PostDetailPage: React.FC = () => {
               </p>
             ) : (
               comments.map((comment) => (
-                <div key={comment.id} className="border-b pb-4">
-                <div className="flex items-center justify-between">
-                  <p className="text-gray-800 font-semibold">
-                    {comment.authorUsername}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    {new Date(comment.createdAt).toLocaleString()}
-                  </p>
+                <div key={comment.id} className="border-b border-gray-500 pb-4">
+                  <div className="flex items-center justify-between">
+                    <p className="text-white font-semibold">
+                      {comment.authorUsername}
+                    </p>
+                    <p className="text-sm text-gray-400">
+                      {new Date(comment.createdAt).toLocaleString()}
+                    </p>
+                  </div>
+                  <p className="text-lightGray mt-2">{comment.text}</p>
+                  {/* Like button with icon and count */}
+                  <div className="flex items-center mt-2">
+                    <button
+                      className="text-sm flex items-center"
+                      onClick={() => {
+                        handleCommentLike(comment);
+                      }}
+                      disabled={commentLikeLoading}
+                    >
+                      <FontAwesomeIcon
+                        icon={faHeart}
+                        className={`mr-2 ${
+                          comment.likes.includes(user?.id ?? "")
+                            ? "text-maroon"
+                            : "text-gray-400"
+                        }`}
+                      />
+                      {comment.likes.length}
+                    </button>
+                  </div>
+                  {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
                 </div>
-                <p className="text-gray-700 mt-2">{comment.text}</p>
-                {/* Like button with icon and count */}
-                <div className="flex items-center mt-2">
-                  <button 
-                    className="text-sm flex items-center" 
-                    onClick={() => {handleCommentLike(comment)}}
-                    disabled={commentLikeLoading}
-                  >
-                    <FontAwesomeIcon 
-                      icon={faHeart} 
-                      className={`mr-2 ${comment.likes.includes(user?.id ?? '') ? 'text-red-600' : 'text-gray-500'}`} 
-                    />
-                    {comment.likes.length}
-                  </button>
-                </div>
-                {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-              </div>
               ))
             )}
           </div>
@@ -564,3 +551,4 @@ const PostDetailPage: React.FC = () => {
 };
 
 export default PostDetailPage;
+

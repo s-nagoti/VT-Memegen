@@ -1,3 +1,4 @@
+// tailwind.config.js
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -8,12 +9,18 @@ export default {
   theme: {
     extend: {
       colors: {
-        darkGrey: '#1f1f1f',
-        maroon: '#bf0000',
-        accentRed: '#b22222',
-        maroonLight: '#993333', // Adjusted to be a bit lighter
-      }
+        charcoal: '#1C1C1C', 
+        hokieStone: '#75787B',  // Hokie Stone color
+        maroon: '#861F41',     // VT Maroon
+        maroonLight: '#993333', // A lighter maroon for hover or accents
+        accentRed: '#bf0000',   // Another accent red (renamed for clarity)
+        neutralWhite: '#D7D2CB', // Neutral white for text and backgrounds
+      },
+      fontFamily: {
+        serif: ['Georgia', 'serif'], // Add serif font family
+        sans: ['Inter', 'sans-serif'], // Default font family
+      },
     },
   },
   plugins: [],
-}
+};

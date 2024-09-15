@@ -1,4 +1,30 @@
+/* Import Tailwind's base, components, and utilities */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Global Styles */
+body {
+  @apply bg-charcoal text-neutralWhite font-sans; /* Apply custom colors and font */
+}
+
+/* Reset Margins and Padding */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Optional: Styling for Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #861F41; /* Maroon color for scrollbar */
+  border-radius: 10px;
+}
+
+/* Additional Global Styles (if any) */
+
+/* Add custom global styles or overrides here */

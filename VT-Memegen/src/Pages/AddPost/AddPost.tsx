@@ -1,5 +1,3 @@
-// src/components/AddPost.tsx
-
 import React, { useState, useRef } from "react";
 import {
   collection,
@@ -101,7 +99,6 @@ const AddPost: React.FC = () => {
         );
         if (!blob) throw new Error("Failed to generate image");
 
-
         // Add a new document to Firestore
         const docRef = await addDoc(collection(db, "posts"), {
           title: title.trim(),
@@ -125,7 +122,6 @@ const AddPost: React.FC = () => {
         await updateDoc(doc(db, "posts", docRef.id), { id: docRef.id, imageUrl: finalImageUrl, 
         });
         
-
         // Update user's posts array
         if (user?.id) {
           await updateDoc(doc(db, "users", user.id), {
@@ -168,7 +164,7 @@ const AddPost: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen bg-charcoal">
       {/* Header */}
       <Header
         email={currentUser?.email ?? "unknown"}
@@ -179,8 +175,8 @@ const AddPost: React.FC = () => {
 
       {/* Main Content */}
       <div className="flex-grow container mx-auto p-6">
-        <div className="bg-white shadow-md rounded-lg p-8 max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
+        <div className="bg-hokieStone shadow-md rounded-lg p-8 max-w-4xl mx-auto">
+          <h2 className="text-3xl font-bold mb-6 text-center text-neutralWhite">
             Create a New Post
           </h2>
 
@@ -206,7 +202,7 @@ const AddPost: React.FC = () => {
           <div className="mb-4">
             <label
               htmlFor="title"
-              className="block text-gray-700 mb-2 font-medium"
+              className="block text-neutralWhite mb-2 font-medium"
             >
               Title
             </label>
@@ -216,7 +212,7 @@ const AddPost: React.FC = () => {
               placeholder="Enter post title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+              className="w-full px-4 py-3 border border-neutralWhite rounded-lg focus:outline-none focus:ring-2 focus:ring-maroonLight transition bg-charcoal text-neutralWhite"
             />
           </div>
 
@@ -224,7 +220,7 @@ const AddPost: React.FC = () => {
           <div className="mb-6">
             <label
               htmlFor="description"
-              className="block text-gray-700 mb-2 font-medium"
+              className="block text-neutralWhite mb-2 font-medium"
             >
               Description
             </label>
@@ -233,17 +229,17 @@ const AddPost: React.FC = () => {
               placeholder="Enter post description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+              className="w-full px-4 py-3 border border-neutralWhite rounded-lg focus:outline-none focus:ring-2 focus:ring-maroonLight transition bg-charcoal text-neutralWhite"
               rows={4}
             />
           </div>
 
           {/* Tag Selection */}
           <div className="mb-6">
-            <h3 className="text-xl font-semibold mb-4">Select Tags</h3>
+            <h3 className="text-xl font-semibold mb-4 text-neutralWhite">Select Tags</h3>
             <div className="flex flex-wrap gap-2">
               {tags.map((tag) => (
-                <label key={tag} className="flex items-center">
+                <label key={tag} className="flex items-center text-neutralWhite">
                   <input
                     type="checkbox"
                     checked={selectedTags.includes(tag)}
@@ -258,20 +254,20 @@ const AddPost: React.FC = () => {
 
           {/* Image Template Selection */}
           <div className="mb-6">
-            <h3 className="text-xl font-semibold mb-4">
+            <h3 className="text-xl font-semibold mb-4 text-neutralWhite">
               Select an Image Template
             </h3>
             <div className="flex space-x-4 overflow-x-auto">
-              {imageTemplates.map((template, index) => (
+            {imageTemplates.map((template, index) => (
                 <img
                   key={index}
                   src={template.src}
                   alt={template.alt}
                   className={`w-32 h-32 object-cover rounded-lg cursor-pointer border-4 ${
                     selectedTemplateIndex === index
-                      ? "border-blue-500"
+                      ? "border-maroon"
                       : "border-transparent"
-                  } hover:border-blue-300`}
+                  } hover:border-maroonLight`}
                   onClick={() => setSelectedTemplateIndex(index)}
                 />
               ))}
@@ -281,7 +277,7 @@ const AddPost: React.FC = () => {
           {/* Selected Template Preview and Text Inputs */}
           {selectedTemplateIndex !== null && (
             <div className="mb-6">
-              <h3 className="text-xl font-semibold mb-4 text-gray-800">
+              <h3 className="text-xl font-semibold mb-4 text-neutralWhite">
                 Customize Your Template
               </h3>
               <div className="flex flex-col md:flex-row md:space-x-6">
@@ -298,14 +294,14 @@ const AddPost: React.FC = () => {
                       (area) => (
                         <span
                           key={area.key}
-                          className="absolute text-white font-bold text-center px-2"
+                          className="absolute font-bold text-center px-2"
                           style={{
                             top: area.position.top,
                             left: area.position.left,
                             transform: "translate(-50%, -50%)",
-                            width: "90%", // Adjust as needed
-                            maxWidth: "150px", // Set maximum width for the text box
-                            whiteSpace: "pre-wrap", // Allow text to wrap
+                            width: "90%",
+                            maxWidth: "150px",
+                            whiteSpace: "pre-wrap",
                             lineHeight: "1.2",
                             color: textColors[area.key] || "#ffffff",
                           }}
@@ -324,7 +320,7 @@ const AddPost: React.FC = () => {
                       <div key={area.key} className="mb-4">
                         <label
                           htmlFor={area.key}
-                          className="block text-gray-700 mb-2 font-medium"
+                          className="block text-neutralWhite mb-2 font-medium"
                         >
                           {area.placeholder}
                         </label>
@@ -336,11 +332,11 @@ const AddPost: React.FC = () => {
                           onChange={(e) =>
                             handleTextChange(area.key, e.target.value)
                           }
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                          className="w-full px-4 py-3 border border-neutralWhite rounded-lg focus:outline-none focus:ring-2 focus:ring-maroonLight transition bg-charcoal text-neutralWhite"
                         />
                         {/* Color Picker */}
                         <div className="mt-2 flex items-center">
-                          <label className="text-gray-700 mr-2">
+                          <label className="text-neutralWhite mr-2">
                             Text Color:
                           </label>
                           <input
@@ -349,7 +345,7 @@ const AddPost: React.FC = () => {
                             onChange={(e) =>
                               handleColorChange(area.key, e.target.value)
                             }
-                            className="w-10 h-10 p-1 border border-gray-300 rounded-full cursor-pointer"
+                            className="w-10 h-10 p-1 border border-neutralWhite rounded-full cursor-pointer"
                           />
                         </div>
                       </div>
@@ -364,10 +360,10 @@ const AddPost: React.FC = () => {
           <button
             onClick={handleAddPost}
             disabled={loading}
-            className={`w-full py-3 text-white font-semibold rounded-lg transition duration-200 ${
+            className={`w-full py-3 text-neutralWhite font-semibold rounded-lg transition duration-200 ${
               loading
-                ? "bg-blue-400 cursor-not-allowed flex items-center justify-center"
-                : "bg-blue-600 hover:bg-blue-700"
+                ? "bg-maroonLight cursor-not-allowed flex items-center justify-center"
+                : "bg-maroon hover:bg-maroonLight"
             }`}
           >
             {loading ? (
@@ -395,3 +391,4 @@ const AddPost: React.FC = () => {
 };
 
 export default AddPost;
+

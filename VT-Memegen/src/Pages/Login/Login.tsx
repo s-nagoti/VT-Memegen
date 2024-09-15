@@ -1,4 +1,3 @@
-// src/components/Login.tsx
 import React, { useState, FormEvent } from 'react';
 import { useAuth } from '../../Contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -33,9 +32,9 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-darkGrey px-4">
+    <div className="min-h-screen flex items-center justify-center bg-charcoal px-4">
       {/* Login Form Container */}
-      <div className="max-w-md w-full bg-gray-800 p-8 rounded-lg shadow-xl">
+      <div className="max-w-md w-full bg-hokieStone p-8 rounded-lg shadow-xl">
         {/* Centered Title */}
         <h2 className="text-4xl font-extrabold text-maroon text-center mb-6">Login</h2>
 
@@ -50,7 +49,7 @@ const Login: React.FC = () => {
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Email Field */}
           <div>
-            <label htmlFor="email" className="block text-gray-300 font-medium mb-1">
+            <label htmlFor="email" className="block text-neutralWhite font-medium mb-1">
               Email
             </label>
             <input
@@ -59,14 +58,14 @@ const Login: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-maroon transition-colors"
+              className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-maroonLight transition-colors text-neutralWhite"
               placeholder="you@example.com"
             />
           </div>
 
           {/* Password Field */}
           <div className="relative">
-            <label htmlFor="password" className="block text-gray-300 font-medium mb-1">
+            <label htmlFor="password" className="block text-neutralWhite font-medium mb-1">
               Password
             </label>
             <input
@@ -75,7 +74,7 @@ const Login: React.FC = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full pr-12 px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-maroon transition-colors"
+              className="w-full pr-12 px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-maroonLight transition-colors text-neutralWhite"
               placeholder="Your password"
             />
             <button
@@ -88,7 +87,7 @@ const Login: React.FC = () => {
                 // Eye-Off Icon (Eye with a Slash)
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 text-gray-400 hover:text-white transition-colors duration-200"
+                  className="h-6 w-6 text-neutralWhite hover:text-maroon transition-colors duration-200"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -110,7 +109,7 @@ const Login: React.FC = () => {
                 // Eye Icon
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 text-gray-400 hover:text-white transition-colors duration-200"
+                  className="h-6 w-6 text-neutralWhite hover:text-maroon transition-colors duration-200"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -136,13 +135,13 @@ const Login: React.FC = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 bg-maroon text-white font-semibold rounded-lg hover:bg-maroonDark transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-maroon disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+            className="w-full py-3 bg-maroon text-neutralWhite font-semibold rounded-lg hover:bg-maroonLight transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-maroonLight disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
           >
             {loading ? (
               <>
                 {/* Loading Spinner */}
                 <svg
-                  className="animate-spin h-5 w-5 mr-3 text-white"
+                  className="animate-spin h-5 w-5 mr-3 text-neutralWhite"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -174,10 +173,10 @@ const Login: React.FC = () => {
 
         {/* Register Section */}
         <div className="text-center">
-          <p className="text-gray-400">Don't have an account?</p>
+          <p className="text-neutralWhite">Don't have an account?</p>
           <button
             onClick={handleRegister}
-            className="mt-2 text-maroon hover:text-maroonDark font-semibold"
+            className="mt-2 text-maroon hover:text-maroonLight font-semibold"
           >
             Register
           </button>

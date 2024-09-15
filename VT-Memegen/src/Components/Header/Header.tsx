@@ -7,7 +7,7 @@ interface HeaderProps {
   onProfileClick?: () => void;
   onCreatePostClick?: () => void;
   showCreatePost?: boolean;
-  showHome?: boolean, 
+  showHome?: boolean; 
   showProfile?: boolean;
 }
 
@@ -28,7 +28,7 @@ const Header = ({
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <header className="bg-darkGrey shadow-md">
+    <header className="bg-charcoal shadow-md"> {/* Updated to bg-charcoal */}
       <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
         {/* Logo or Brand Name */}
         <button onClick={onHomeClick}>
@@ -37,7 +37,6 @@ const Header = ({
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-4">
-
           {/* Home Button */}
           {showHome &&
           <button
@@ -55,23 +54,13 @@ const Header = ({
               onClick={onProfileClick}
             >
               {username}
-             
             </button>
-            
-            {/* Optional Dropdown Menu */}
-            {/* 
-            <div className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg z-20">
-              <button className="block px-4 py-2 text-sm text-white hover:bg-maroon">Profile</button>
-              <button className="block px-4 py-2 text-sm text-white hover:bg-maroon">Settings</button>
-              <button className="block px-4 py-2 text-sm text-white hover:bg-maroon">Logout</button>
-            </div>
-            */}
           </div>}
 
           {/* Create Post Button */}
           {showCreatePost && (
             <button
-              className="px-4 py-2 font-medium text-white bg-maroon hover:bg-maroonDark transition-colors duration-200 rounded"
+              className="px-4 py-2 font-medium text-white bg-maroon hover:bg-maroonLight transition-colors duration-200 rounded"
               onClick={onCreatePostClick}
             >
               Create Post
@@ -125,7 +114,7 @@ const Header = ({
 
       {/* Mobile Navigation Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-darkGrey px-4 pb-4">
+        <div className="md:hidden bg-charcoal px-4 pb-4"> {/* Updated to bg-charcoal */}
           <div className="flex flex-col items-start gap-2">
             {/* Home Button */}
             <button
@@ -152,7 +141,7 @@ const Header = ({
             {/* Create Post Button */}
             {showCreatePost && (
               <button
-                className="w-full text-left px-4 py-2 font-medium text-white bg-maroon hover:bg-maroonDark transition-colors duration-200 rounded"
+                className="w-full text-left px-4 py-2 font-medium text-white bg-maroon hover:bg-maroonLight transition-colors duration-200 rounded"
                 onClick={() => {
                   onCreatePostClick && onCreatePostClick();
                   setIsMobileMenuOpen(false);

@@ -138,8 +138,8 @@ const ProfilePage: React.FC = () => {
     } catch (err: any) {
       console.error("Error deleting post:", err);
       setError(err.message || "Failed to delete post.");
-  }
-};
+    }
+  };
 
   const handleDeleteAccount = async () => {
     if (!user) return;
@@ -190,7 +190,7 @@ const ProfilePage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen bg-gray-100">
+      <div className="flex justify-center items-center h-screen bg-gray-800">
         <div className="text-center">
           <svg
             className="animate-spin h-12 w-12 text-blue-600 mx-auto mb-4"
@@ -212,7 +212,7 @@ const ProfilePage: React.FC = () => {
               d="M4 12a8 8 0 018-8v8H4z"
             ></path>
           </svg>
-          <p className="text-xl font-semibold text-gray-700">
+          <p className="text-xl font-semibold text-neutralWhite">
             Loading profile...
           </p>
         </div>
@@ -222,14 +222,14 @@ const ProfilePage: React.FC = () => {
 
   if (!user) {
     return (
-      <div className="flex justify-center items-center h-screen bg-gray-100">
+      <div className="flex justify-center items-center h-screen hokieStone-800">
         <div className="text-center">
-          <p className="text-xl font-semibold text-gray-700">
+          <p className="text-xl font-semibold text-neutralWhite">
             No user is logged in.
           </p>
           <button
             onClick={() => navigate("/login")}
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition-colors duration-200"
+            className="mt-4 px-4 py-2 bg-maroon text-white rounded-lg shadow hover:bg-maroonLight transition-colors duration-200"
           >
             Go to Login
           </button>
@@ -253,9 +253,9 @@ const ProfilePage: React.FC = () => {
     icon: Icon,
     iconColor,
   }) => (
-    <div className="flex-1 bg-white p-6 rounded-lg shadow-md border-t-4 border-[#E87722]">
+    <div className="flex-1 bg-hokieStone p-6 rounded-lg shadow-md border-t-4 border-[#E87722]">
       {" "}
-      {/* Burnt Orange border */}
+      {/* Hokie Stone background */}
       <h2 className="text-2xl font-bold text-[#861F41] mb-4 flex items-center">
         {" "}
         {/* Chicago Maroon text */}
@@ -263,7 +263,7 @@ const ProfilePage: React.FC = () => {
         {title}
       </h2>
       {posts.length === 0 ? (
-        <p className="text-gray-500">{emptyMessage}</p>
+        <p className="text-neutralWhite">{emptyMessage}</p>
       ) : (
         <div className="grid grid-cols-1 gap-6">
           {posts.map((post) => (
@@ -274,7 +274,7 @@ const ProfilePage: React.FC = () => {
             >
               <div
                 key={post.id}
-                className="flex flex-col sm:flex-row bg-gray-50 rounded-lg shadow-sm overflow-hidden transition duration-300 ease-in-out hover:shadow-md hover:bg-[#F1F1F1]"
+                className="flex flex-col sm:flex-row bg-hokieStone rounded-lg shadow-sm overflow-hidden transition duration-300                ease-in-out hover:shadow-md hover:bg-gray-600"
               >
                 <div className="sm:w-1/3 flex-shrink-0">
                   <img
@@ -287,9 +287,9 @@ const ProfilePage: React.FC = () => {
                   <div>
                     <h3 className="text-lg font-semibold text-[#861F41]">
                       {post.title}
-                    </h3>{" "}
+                    </h3>
                     {/* Chicago Maroon text */}
-                    <p className="mt-2 text-sm text-gray-600">
+                    <p className="mt-2 text-sm text-neutralWhite">
                       {post.description}
                     </p>
                   </div>
@@ -299,7 +299,6 @@ const ProfilePage: React.FC = () => {
                     <div className="flex items-center">
                       <Icon className={`${iconColor} mr-2`} />
                       <span className="text-sm font-medium text-[#E87722]">
-                        {" "}
                         {/* Burnt Orange text */}
                         {title === "Your Posts"
                           ? `${post.upvotes.length} upvotes`
@@ -308,17 +307,17 @@ const ProfilePage: React.FC = () => {
                     </div>
 
                     {/* Delete Button */}
-                    { post.authorId === user.id &&
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation(); // Prevent navigating to post details
-                        handleDelete(post.id);
-                      }}
-                      className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 transition duration-200"
-                    >
-                      Delete
-                    </button>
-      }
+                    {post.authorId === user.id && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent navigating to post details
+                          handleDelete(post.id);
+                        }}
+                        className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 transition duration-200"
+                      >
+                        Delete
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
@@ -330,7 +329,7 @@ const ProfilePage: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-charcoal">
       {/* Header */}
       <Header
         onHomeClick={() => navigate("/")}
@@ -341,13 +340,11 @@ const ProfilePage: React.FC = () => {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* User Information Section */}
-        <section className="bg-white rounded-2xl shadow-lg overflow-hidden mb-8 border-t-4 border-[#E87722]">
-          {" "}
-          {/* Burnt Orange border */}
+        <section className="bg-hokieStone rounded-2xl shadow-lg overflow-hidden mb-8 border-t-4 border-[#E87722]">
+          {/* Hokie Stone background */}
           <div className="md:flex">
             <div className="md:flex-shrink-0">
               <div className="h-48 w-full md:w-48 bg-gradient-to-br from-[#861F41] to-[#E87722] flex items-center justify-center">
-                {" "}
                 {/* VT color gradient */}
                 <span className="text-5xl font-bold text-white">
                   {user?.username?.charAt(0).toUpperCase() ?? ""}
@@ -357,9 +354,9 @@ const ProfilePage: React.FC = () => {
             <div className="p-8">
               <h1 className="text-3xl font-extrabold text-[#861F41] sm:text-4xl">
                 {user.username}
-              </h1>{" "}
+              </h1>
               {/* Chicago Maroon text */}
-              <p className="mt-2 text-xl text-gray-500">{user.email}</p>
+              <p className="mt-2 text-xl text-neutralWhite">{user.email}</p>
               <div className="mt-6 flex flex-wrap gap-4">
                 <button
                   onClick={handleLogout}
@@ -370,7 +367,7 @@ const ProfilePage: React.FC = () => {
                 </button>
                 <button
                   onClick={handleDeleteAccount}
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-[#861F41] bg-[#F1F1F1] hover:bg-[#E1E1E1] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#861F41]" // Light background, Chicago Maroon text
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-[#861F41] bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#861F41]" // Dark background, Chicago Maroon text
                 >
                   <FaTrash className="mr-2" />
                   Delete Account
@@ -378,18 +375,18 @@ const ProfilePage: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className="bg-gray-50 px-4 py-5 sm:p-6">
+          <div className="hokieStone px-4 py-5 sm:p-6">
             <div className="flex items-center">
-              <FaThumbsUp className="text-[#E87722] text-3xl mr-4" />{" "}
+              <FaThumbsUp className="text-[#E87722] text-3xl mr-4" />
               {/* Burnt Orange icon */}
               <div>
                 <h2 className="text-lg font-medium text-[#861F41]">
                   Total Upvotes
-                </h2>{" "}
+                </h2>
                 {/* Chicago Maroon text */}
                 <p className="mt-1 text-3xl font-semibold text-[#E87722]">
                   {totalUpvotes}
-                </p>{" "}
+                </p>
                 {/* Burnt Orange text */}
               </div>
             </div>
@@ -447,3 +444,4 @@ const ProfilePage: React.FC = () => {
 };
 
 export default ProfilePage;
+
