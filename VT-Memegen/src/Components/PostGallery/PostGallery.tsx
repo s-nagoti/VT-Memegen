@@ -4,7 +4,7 @@ import { collection, getDocs, query, getCountFromServer } from 'firebase/firesto
 import { db } from '../../firebaseConfig'; // Import the Firestore database
 import { useNavigate } from 'react-router-dom';
 import { FaThumbsUp, FaThumbsDown, FaComments } from 'react-icons/fa'; // Import icons from react-icons
-import {Post} from '../../Models/Post'
+import { Post } from '../../Models/Post'
 
 const PostGallery: React.FC = () => {
   // State to hold the list of posts
@@ -81,7 +81,40 @@ const PostGallery: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h2 className="text-3xl font-bold mb-6 text-center">Post Gallery</h2>
+      {/* <h2 className="text-3xl font-bold mb-6 text-center">Post Gallery</h2> */}
+      <div className="flex items-center gap-4 py-6">
+        <button
+          className="px-4 py-2 font-medium text-white bg-blue-600 hover:bg-blue-700 rounded"
+        //onClick={onHousingClick}
+        >
+          Housing
+        </button>
+        <button
+          className="px-4 py-2 font-medium text-white bg-red-600 hover:bg-red-700 rounded"
+        //onClick={onClassesClick}
+        >
+          Classes
+        </button>
+        <button
+          className="px-4 py-2 font-medium text-white bg-yellow-600 hover:bg-yellow-700 rounded"
+        //onClick={onDiningClick}
+        >
+          Dining
+        </button>
+        <button
+          className="px-4 py-2 font-medium text-white bg-blue-600 hover:bg-blue-700 rounded"
+        //onClick={onNightLifeClick}
+        >
+          NightLife
+        </button>
+        <button
+          className="px-4 py-2 font-medium text-white bg-red-600 hover:bg-red-700 rounded"
+        //onClick={onSportsClick}
+        >
+          Sports
+        </button>
+
+      </div>
       {posts.length === 0 ? (
         <p className="text-center text-gray-500">No posts available.</p>
       ) : (

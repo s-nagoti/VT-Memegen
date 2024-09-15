@@ -24,11 +24,6 @@ const Header = ({
   onHomeClick,
   onProfileClick,
   onCreatePostClick,
-  onHousingClick,
-  onClassesClick,
-  onDiningClick,
-  onNightLifeClick,
-  onSportsClick,
   showCreatePost,
 }: HeaderProps) => {
   // Extract the username from the email
@@ -36,40 +31,7 @@ const Header = ({
 
   return (
     <header className="flex justify-between items-center p-5 bg-gray-100 shadow-md">
-      <div className="text-2xl font-bold">{title}</div>
-      <div className="flex items-center gap-40">
-        <button
-          className="px-4 py-2 font-medium text-white bg-blue-600 hover:bg-blue-700 rounded"
-          onClick={onHousingClick}
-        >
-          Housing
-        </button>
-        <button
-          className="px-4 py-2 font-medium text-white bg-red-600 hover:bg-red-700 rounded"
-          onClick={onClassesClick}
-        >
-          Classes
-        </button>
-        <button
-          className="px-4 py-2 font-medium text-white bg-yellow-600 hover:bg-yellow-700 rounded"
-          onClick={onDiningClick}
-        >
-          Dining
-        </button>
-        <button
-          className="px-4 py-2 font-medium text-white bg-blue-600 hover:bg-blue-700 rounded"
-          onClick={onNightLifeClick}
-        >
-          NightLife
-        </button>
-        <button
-          className="px-4 py-2 font-medium text-white bg-red-600 hover:bg-red-700 rounded"
-          onClick={onSportsClick}
-        >
-          Sports
-        </button>
-
-      </div>
+      <div className="text-2xl text-[#800000] font-bold ">{title}</div>
       <div className="flex items-center gap-4">
         <button
           className="px-4 py-2 font-medium hover:bg-gray-200 rounded"
@@ -102,7 +64,7 @@ const Header = ({
         </div>
         {showCreatePost &&
           <button
-            className="px-4 py-2 font-medium text-white bg-red-600 hover:bg-red-700 rounded"
+            className="px-4 py-2 font-medium text-white bg-orange-600 hover:bg-orange-700 rounded"
             onClick={onCreatePostClick}
           >
             Create Post
