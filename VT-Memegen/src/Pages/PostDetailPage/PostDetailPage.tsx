@@ -13,8 +13,8 @@ import {
   writeBatch,
   Timestamp,
   query,
-    onSnapshot,
-    orderBy,
+  onSnapshot,
+  orderBy,
 } from 'firebase/firestore';
 import { db } from '../../firebaseConfig';
 import { useAuth } from '../../Contexts/AuthContext';
@@ -39,9 +39,9 @@ const PostDetailPage: React.FC = () => {
 
   useEffect(() => {
     if (!postId) return;
-  
+
     const unsubscribe = fetchComments(postId, setComments);
-  
+
     return () => unsubscribe(); // Cleanup on unmount or postId change
   }, [postId]);
 
@@ -108,7 +108,7 @@ const PostDetailPage: React.FC = () => {
   const fetchComments = (postId: string, setComments: (comments: Comment[]) => void) => {
     const commentsRef = collection(db, 'posts', postId, 'comments');
     const q = query(commentsRef, orderBy('createdAt', 'asc'));
-  
+
     const unsubscribe = onSnapshot(
       q,
       (querySnapshot) => {
@@ -131,7 +131,7 @@ const PostDetailPage: React.FC = () => {
         // Handle error (e.g., set an error state)
       }
     );
-  
+
     return unsubscribe; // For cleanup
   };
 
@@ -147,7 +147,7 @@ const PostDetailPage: React.FC = () => {
       const downvotes = post.downvotes as string[]
       const upvotes = post.upvotes as string[]
       const hasDownvoted = downvotes.includes(user.id);
-      const hasUpvoted =    upvotes.includes(user.id);
+      const hasUpvoted = upvotes.includes(user.id);
 
       const batch = writeBatch(db);
 
@@ -202,7 +202,7 @@ const PostDetailPage: React.FC = () => {
       const downvotes = post.downvotes as string[]
       const upvotes = post.upvotes as string[]
       const hasDownvoted = downvotes.includes(user.id);
-      const hasUpvoted =  upvotes.includes(user.id);
+      const hasUpvoted = upvotes.includes(user.id);
 
       const batch = writeBatch(db);
 
@@ -247,50 +247,50 @@ const PostDetailPage: React.FC = () => {
 
 
   const handleAddComment = async (e: FormEvent) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (!user) {
-    setError('You must be logged in to add a comment.');
-    return;
-  }
+    if (!user) {
+      setError('You must be logged in to add a comment.');
+      return;
+    }
 
-  if (!commentText.trim()) {
-    setError('Comment cannot be empty.');
-    return;
-  }
+    if (!commentText.trim()) {
+      setError('Comment cannot be empty.');
+      return;
+    }
 
-  try {
-    const commentsRef = collection(db, 'posts', postId!, 'comments');
-    const docRef = await addDoc(commentsRef, {
-      authorId: user.id,
-      authorUsername: user.username ?? "",
-      text: commentText.trim(),
-      createdAt: Timestamp.fromDate(new Date()),
-    });
+    try {
+      const commentsRef = collection(db, 'posts', postId!, 'comments');
+      const docRef = await addDoc(commentsRef, {
+        authorId: user.id,
+        authorUsername: user.username ?? "",
+        text: commentText.trim(),
+        createdAt: Timestamp.fromDate(new Date()),
+      });
 
-    // Optionally, update local state optimistically
-    const newComment: Comment = {
-      id: docRef.id,
-      authorId: user.id,
-      authorUsername: user.username ?? "",
-      likes: [],
-      text: commentText.trim(),
-      createdAt: new Date(),
-    };
+      // Optionally, update local state optimistically
+      const newComment: Comment = {
+        id: docRef.id,
+        authorId: user.id,
+        authorUsername: user.username ?? "",
+        likes: [],
+        text: commentText.trim(),
+        createdAt: new Date(),
+      };
 
-    // Clear the comment input field
-    setCommentText('');
+      // Clear the comment input field
+      setCommentText('');
 
-    // Clear any existing errors
-    setError(null);
-  } catch (error) {
-    console.error('Error adding comment:', error);
-    setError('Failed to add comment.');
-  }
-};
-  
+      // Clear any existing errors
+      setError(null);
+    } catch (error) {
+      console.error('Error adding comment:', error);
+      setError('Failed to add comment.');
+    }
+  };
 
-  
+
+
 
 
   // Now, ensure that all Hooks are called at the top level
@@ -323,9 +323,9 @@ const PostDetailPage: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto p-4">
 
-    <Header
+      <Header
         onHomeClick={() => navigate('/')}
-    />
+      />
 
       {/* Post Container */}
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -343,15 +343,14 @@ const PostDetailPage: React.FC = () => {
             <div>
               <h2 className="text-2xl font-bold text-maroon mb-4">{post.title}</h2>
               <p className="text-gray-700">{post.description}</p>
-             
+
             </div>
             {/* Upvote/Downvote Section */}
             <div className="mt-6 flex items-center space-x-4">
               <button
                 onClick={handleUpvote}
-                className={`flex items-center text-maroon hover:text-maroon-dark ${
-                  post.upvotes.includes(user?.id || '') ? 'font-semibold' : ''
-                }`}
+                className={`flex items-center text-maroon hover:text-maroon-dark ${post.upvotes.includes(user?.id || '') ? 'font-semibold' : ''
+                  }`}
               >
                 {/* Upvote Icon */}
                 <svg
@@ -367,9 +366,8 @@ const PostDetailPage: React.FC = () => {
               </button>
               <button
                 onClick={handleDownvote}
-                className={`flex items-center text-maroon hover:text-maroon-dark ${
-                  post.downvotes.includes(user?.id || '') ? 'font-semibold' : ''
-                }`}
+                className={`flex items-center text-maroon hover:text-maroon-dark ${post.downvotes.includes(user?.id || '') ? 'font-semibold' : ''
+                  }`}
               >
                 {/* Downvote Icon */}
                 <svg
@@ -404,31 +402,30 @@ const PostDetailPage: React.FC = () => {
           ></textarea>
           <button
             type="submit"
-            className={`mt-2 px-4 py-2 bg-maroon text-white rounded-lg hover:bg-maroon-dark transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-maroon ${
-              !commentText.trim() ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
+            className={`mt-2 px-4 py-2 bg-maroon text-white rounded-lg hover:bg-maroon-dark transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-maroon ${!commentText.trim() ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
             disabled={!commentText.trim()}
           >
             Post Comment
           </button>
         </form>
 
-            {/* Comments List */}
-<div className="space-y-4">
-  {comments.length === 0 ? (
-    <p className="text-gray-500">No comments yet. Be the first to comment!</p>
-  ) : (
-    comments.map((comment) => (
-      <div key={comment.id} className="border-b pb-4">
-        <p className="text-gray-800 font-semibold">{comment.authorUsername}</p>
-        <p className="text-gray-700">{comment.text}</p>
-        <p className="text-sm text-gray-500">
-          {new Date(comment.createdAt).toLocaleString()}
-        </p>
-      </div>
-    ))
-  )}
-</div>
+        {/* Comments List */}
+        <div className="space-y-4">
+          {comments.length === 0 ? (
+            <p className="text-gray-500">No comments yet. Be the first to comment!</p>
+          ) : (
+            comments.map((comment) => (
+              <div key={comment.id} className="border-b pb-4">
+                <p className="text-gray-800 font-semibold">{comment.authorUsername}</p>
+                <p className="text-gray-700">{comment.text}</p>
+                <p className="text-sm text-gray-500">
+                  {new Date(comment.createdAt).toLocaleString()}
+                </p>
+              </div>
+            ))
+          )}
+        </div>
 
       </div>
     </div>
