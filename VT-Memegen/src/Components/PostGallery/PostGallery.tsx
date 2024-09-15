@@ -128,8 +128,9 @@ const PostGallery: React.FC = () => {
                       aria-label="Downvote"
                     >
                       <FaThumbsDown className="mr-1" />
-                      <span>{post.downvotes.length}</span>
+                      <span>{post.commentsCount}</span>
                     </button>
+
                   </div>
                 </div>
               </div>
