@@ -18,9 +18,12 @@ export default defineConfig(({ mode }) => {
           'process.env': env
       },
       server: {
-        https: {
-          key: fs.readFileSync('key.pem'),
-          cert: fs.readFileSync('cert.pem')
+        proxy: {
+          '/api/explain-image': {
+            target: 'http://localhost:5000',
+            changeOrigin: true,
+            rewrite: (path) => path.replace(/^\/api/, '')
+          }
         }
       }
   };
