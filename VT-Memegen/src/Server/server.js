@@ -2,6 +2,7 @@ import express from "express"; // Import Express
 import cors from "cors"; // Import CORS
 import { OpenAI } from "openai"; // Import OpenAI
 import dotenv from "dotenv"; // Import dotenv
+import https from 'https'
 // Initialize OpenAI
 const app = express();
 
@@ -11,6 +12,8 @@ const apiKey = firstHalfKey + secondHalfKey
 const openai = new OpenAI({ apiKey: apiKey });
 
 app.use(cors());
+const httpsAgent = new https.Agent({ rejectUnauthorized: false });
+
 
 // Middleware to parse JSON bodies
 app.use(express.json());
