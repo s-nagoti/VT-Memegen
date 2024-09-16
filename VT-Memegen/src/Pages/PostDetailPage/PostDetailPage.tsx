@@ -325,213 +325,209 @@ const PostDetailPage: React.FC = () => {
     }
   };
 
-  // Render Loading State
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-charcoal text-white">
-        <FaSpinner className="animate-spin text-4xl text-accentRed" />
-        <span className="ml-2 text-xl">Loading post...</span>
-      </div>
-    );
-  }
-
-  // Render Error State
-  if (error) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-charcoal text-white">
-        <div className="flex items-center bg-red-100 text-red-700 px-6 py-4 rounded-lg">
-          <FaExclamationCircle className="w-6 h-6 mr-3" />
-          <span>{error}</span>
-        </div>
-      </div>
-    );
-  }
-
-  // Render Not Found State
-  if (!post) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-charcoal text-white">
-        <div className="flex items-center bg-yellow-100 text-yellow-700 px-6 py-4 rounded-lg">
-          <FaExclamationCircle className="w-6 h-6 mr-3" />
-          <span>Post not found.</span>
-        </div>
-      </div>
-    );
-  }
-
+ // Render Loading State
+if (loading) {
   return (
-    <div className="min-h-screen bg-charcoal">
-      {/* Header */}
-      <Header
-        email={user?.email || ""}
-        onHomeClick={() => navigate("/")}
-        onProfileClick={() => navigate("/profile-page")}
-        showHome={true}
-        showProfile={true}
-      />
-
-      {/* Main Content */}
-      <div className="container mx-auto p-6">
-        {/* Post Container */}
-        <div className="bg-darkGrey rounded-lg shadow-md overflow-hidden">
-          <div className="flex flex-col md:flex-row">
-            {/* Image Section */}
-            <div className="md:w-1/2">
-              <img
-                src={post.imageUrl}
-                alt={post.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
-            {/* Content Section */}
-            <div className="md:w-1/2 p-6 flex flex-col justify-between">
-              <div>
-                <h2 className="text-2xl font-bold text-white mb-4">
-                  {post.title}
-                </h2>
-                <p className="text-lightGray">{post.description}</p>
-              </div>
-              {/* Upvote/Downvote Section */}
-              <div className="mt-6 flex items-center space-x-6">
-                {/* Upvote Button */}
-                <button
-                  onClick={handleUpvote}
-                  disabled={voteLoading}
-                  className={`flex items-center space-x-2 text-lightGray hover:text-maroon transition-colors duration-200 ${
-                    post.upvotes.includes(user?.id || "") ? "font-semibold" : ""
-                  }`}
-                >
-                  <FaArrowUp className="w-5 h-5" />
-                  <span>{post.upvotes.length}</span>
-                </button>
-                {/* Downvote Button */}
-                <button
-                  onClick={handleDownvote}
-                  disabled={voteLoading}
-                  className={`flex items-center space-x-2 text-lightGray hover:text-maroon transition-colors duration-200 ${
-                    post.downvotes.includes(user?.id || "")
-                      ? "font-semibold"
-                      : ""
-                  }`}
-                >
-                  <FaArrowDown className="w-5 h-5" />
-                  <span>{post.downvotes.length}</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* AI Summarize Button and Section */}
-        <div className="mb-6 py-5">
-          <button
-            onClick={handleToggleSummary}
-            className="w-full py-3 text-white font-semibold rounded-lg bg-maroon hover:bg-maroonLight transition duration-200 flex items-center justify-center space-x-2"
-          >
-            <FaBrain className="w-5 h-5" />
-            <span>AI Summarize</span>
-          </button>
-          {summaryExpanded && (
-            <div className="mt-4 p-4 border border-gray-300 rounded-lg bg-darkGrey">
-              {/* AI Summary Loading */}
-              {loadingSummary ? (
-                <div className="flex items-center space-x-2">
-                  <FaSpinner className="animate-spin w-5 h-5 text-maroon" />
-                  <span className="text-lightGray">Generating summary...</span>
-                </div>
-              ) : (
-                <>
-                  <h3 className="text-lg font-semibold mb-2 text-lightGray">
-                    AI Generated Summary:
-                  </h3>
-                  <p className="text-lightGray">{aiSummary}</p>
-                </>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* Comments Section */}
-        <div className="mt-8 bg-darkGrey p-3 rounded-lg shadow-md">
-          <h3 className="text-xl font-semibold text-white mb-4">Comments</h3>
-
-          {/* Add Comment Form */}
-          <form onSubmit={handleAddComment} className="mb-6">
-            <textarea
-              value={commentText}
-              onChange={(e) => setCommentText(e.target.value)}
-              placeholder="Add a comment..."
-              className="w-full px-4 py-3 border border-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-maroon resize-none bg-gray-700 text-white"
-              rows={3}
-              required
-            ></textarea>
-            <button
-              type="submit"
-              disabled={commentLoading || !commentText.trim()}
-              className={`mt-2 px-4 py-2 bg-maroon text-white font-semibold rounded-lg hover:bg-maroonLight transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-maroon ${
-                !commentText.trim() || commentLoading
-                  ? "opacity-50 cursor-not-allowed"
-                  : ""
-              }`}
-            >
-              {commentLoading ? (
-                <>
-                  <FaSpinner className="animate-spin mr-2" />
-                  Posting...
-                </>
-              ) : (
-                "Post Comment"
-              )}
-            </button>
-          </form>
-
-          {/* Comments List */}
-          <div className="space-y-4">
-            {comments.length === 0 ? (
-              <p className="text-gray-500">
-                No comments yet. Be the first to comment!
-              </p>
-            ) : (
-              comments.map((comment) => (
-                <div key={comment.id} className="border-b border-gray-500 pb-4">
-                  <div className="flex items-center justify-between">
-                    <p className="text-white font-semibold">
-                      {comment.authorUsername}
-                    </p>
-                    <p className="text-sm text-gray-400">
-                      {new Date(comment.createdAt).toLocaleString()}
-                    </p>
-                  </div>
-                  <p className="text-lightGray mt-2">{comment.text}</p>
-                  {/* Like button with icon and count */}
-                  <div className="flex items-center mt-2">
-                    <button
-                      className="text-sm flex items-center"
-                      onClick={() => {
-                        handleCommentLike(comment);
-                      }}
-                      disabled={commentLikeLoading}
-                    >
-                      <FontAwesomeIcon
-                        icon={faHeart}
-                        className={`mr-2 ${
-                          comment.likes.includes(user?.id ?? "")
-                            ? "text-maroon"
-                            : "text-gray-400"
-                        }`}
-                      />
-                      {comment.likes.length}
-                    </button>
-                  </div>
-                  {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-                </div>
-              ))
-            )}
-          </div>
-        </div>
+    <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">
+      <div className="flex flex-col items-center space-y-2">
+        <FaSpinner className="animate-spin text-4xl text-[#E87722]" />
+        <span className="text-2xl">Loading post...</span>
       </div>
     </div>
   );
+}
+
+// Render Error State
+if (error) {
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">
+      <div className="flex items-center bg-red-600 text-white px-6 py-4 rounded-lg shadow-md">
+        <FaExclamationCircle className="w-6 h-6 mr-3" />
+        <span>{error}</span>
+      </div>
+    </div>
+  );
+}
+
+// Render Not Found State
+if (!post) {
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">
+      <div className="flex items-center bg-yellow-600 text-white px-6 py-4 rounded-lg shadow-md">
+        <FaExclamationCircle className="w-6 h-6 mr-3" />
+        <span>Post not found.</span>
+      </div>
+    </div>
+  );
+}
+
+return (
+  <div className="min-h-screen bg-gray-900">
+    {/* Header */}
+    <Header
+      email={user?.email || ""}
+      onHomeClick={() => navigate("/")}
+      onProfileClick={() => navigate("/profile-page")}
+      showHome={true}
+      showProfile={true}
+    />
+
+    {/* Main Content */}
+    <div className="container mx-auto p-6">
+      {/* Post Container */}
+      <div className="bg-gray-800 rounded-lg shadow-lg overflow-hidden mb-8">
+        <div className="flex flex-col md:flex-row">
+          {/* Image Section */}
+          <div className="md:w-1/2">
+            <img
+              src={post.imageUrl}
+              alt={post.title}
+              className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+            />
+          </div>
+          {/* Content Section */}
+          <div className="md:w-1/2 p-6 flex flex-col justify-between">
+            <div>
+              <h2 className="text-3xl font-bold text-white mb-4">
+                {post.title}
+              </h2>
+              <p className="text-gray-400 mb-6">{post.description}</p>
+            </div>
+            {/* Upvote/Downvote Section */}
+            <div className="flex items-center space-x-6">
+              {/* Upvote Button */}
+              <button
+                onClick={handleUpvote}
+                disabled={voteLoading}
+                className={`flex items-center space-x-2 text-gray-400 hover:text-[#861F41] transition-colors duration-200 ${
+                  post.upvotes.includes(user?.id || "") ? "font-semibold" : ""
+                }`}
+              >
+                <FaArrowUp className="w-5 h-5" />
+                <span>{post.upvotes.length}</span>
+              </button>
+              {/* Downvote Button */}
+              <button
+                onClick={handleDownvote}
+                disabled={voteLoading}
+                className={`flex items-center space-x-2 text-gray-400 hover:text-[#861F41] transition-colors duration-200 ${
+                  post.downvotes.includes(user?.id || "") ? "font-semibold" : ""
+                }`}
+              >
+                <FaArrowDown className="w-5 h-5" />
+                <span>{post.downvotes.length}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* AI Summarize Button and Section */}
+      <div className="mb-8">
+        <button
+          onClick={handleToggleSummary}
+          className="w-full py-3 text-white font-semibold rounded-lg bg-[#861F41] hover:bg-[#E87722] transition duration-200 flex items-center justify-center space-x-2 shadow-md"
+        >
+          <FaBrain className="w-5 h-5" />
+          <span>AI Summarize</span>
+        </button>
+        {summaryExpanded && (
+          <div className="mt-4 p-4 border border-gray-600 rounded-lg bg-gray-800 shadow-md">
+            {/* AI Summary Loading */}
+            {loadingSummary ? (
+              <div className="flex items-center space-x-2">
+                <FaSpinner className="animate-spin w-5 h-5 text-[#E87722]" />
+                <span className="text-gray-400">Generating summary...</span>
+              </div>
+            ) : (
+              <>
+                <h3 className="text-lg font-semibold mb-2 text-white">
+                  AI Generated Summary:
+                </h3>
+                <p className="text-gray-400">{aiSummary}</p>
+              </>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Comments Section */}
+      <div className="bg-gray-800 p-6 rounded-lg shadow-md">
+        <h3 className="text-2xl font-semibold text-white mb-6">Comments</h3>
+
+        {/* Add Comment Form */}
+        <form onSubmit={handleAddComment} className="mb-6">
+          <textarea
+            value={commentText}
+            onChange={(e) => setCommentText(e.target.value)}
+            placeholder="Add a comment..."
+            className="w-full px-4 py-3 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E87722] resize-none bg-gray-700 text-white"
+            rows={3}
+            required
+          ></textarea>
+          <button
+            type="submit"
+            disabled={commentLoading || !commentText.trim()}
+            className={`mt-4 px-4 py-2 bg-[#861F41] text-white font-semibold rounded-lg hover:bg-[#E87722] transition duration-200 focus:outline-none focus:ring-2 focus:ring-[#E87722] ${
+              !commentText.trim() || commentLoading
+                ? "opacity-50 cursor-not-allowed"
+                : ""
+            } flex items-center justify-center space-x-2`}
+          >
+            {commentLoading ? (
+              <>
+                <FaSpinner className="animate-spin mr-2" />
+                Posting...
+              </>
+            ) : (
+              "Post Comment"
+            )}
+          </button>
+        </form>
+
+        {/* Comments List */}
+        <div className="space-y-6">
+          {comments.length === 0 ? (
+            <p className="text-gray-500">No comments yet. Be the first to comment!</p>
+          ) : (
+            comments.map((comment) => (
+              <div key={comment.id} className="border-b border-gray-700 pb-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-white font-semibold">
+                    {comment.authorUsername}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    {new Date(comment.createdAt).toLocaleString()}
+                  </p>
+                </div>
+                <p className="text-gray-400 mt-2">{comment.text}</p>
+                {/* Like button with icon and count */}
+                <div className="flex items-center mt-2">
+                  <button
+                    className="text-sm flex items-center"
+                    onClick={() => handleCommentLike(comment)}
+                    disabled={commentLikeLoading}
+                  >
+                    <FontAwesomeIcon
+                      icon={faHeart}
+                      className={`mr-2 ${
+                        comment.likes.includes(user?.id ?? "")
+                          ? "text-[#861F41]"
+                          : "text-gray-400"
+                      }`}
+                    />
+                    {comment.likes.length}
+                  </button>
+                </div>
+                {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+);
 };
 
 export default PostDetailPage;

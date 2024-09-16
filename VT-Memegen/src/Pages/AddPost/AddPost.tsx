@@ -163,7 +163,7 @@ const AddPost: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-charcoal">
+    <div className="flex flex-col min-h-screen bg-gray-900">
       {/* Header */}
       <Header
         email={currentUser?.email ?? "unknown"}
@@ -171,21 +171,21 @@ const AddPost: React.FC = () => {
         showHome={true}
         showProfile={true}
       />
-
+  
       {/* Main Content */}
       <div className="flex-grow container mx-auto p-6">
-        <div className="bg-hokieStone shadow-md rounded-lg p-8 max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold mb-6 text-center text-neutralWhite">
+        <div className="bg-gray-800 shadow-md rounded-lg p-8 max-w-4xl mx-auto">
+          <h2 className="text-3xl font-bold mb-6 text-center text-white">
             Create a New Post
           </h2>
-
+  
           {/* Feedback Messages */}
           {message && (
             <div
               className={`flex items-center mb-6 p-4 rounded-lg ${
                 message.type === "success"
-                  ? "bg-green-100 text-green-700"
-                  : "bg-red-100 text-red-700"
+                  ? "bg-green-700 text-white"
+                  : "bg-red-700 text-white"
               }`}
             >
               {message.type === "success" ? (
@@ -196,12 +196,12 @@ const AddPost: React.FC = () => {
               <span>{message.text}</span>
             </div>
           )}
-
+  
           {/* Title Input */}
           <div className="mb-4">
             <label
               htmlFor="title"
-              className="block text-neutralWhite mb-2 font-medium"
+              className="block text-white mb-2 font-medium"
             >
               Title
             </label>
@@ -211,15 +211,15 @@ const AddPost: React.FC = () => {
               placeholder="Enter post title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-4 py-3 border border-neutralWhite rounded-lg focus:outline-none focus:ring-2 focus:ring-maroonLight transition bg-charcoal text-neutralWhite"
+              className="w-full px-4 py-3 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E87722] transition bg-gray-900 text-white"
             />
           </div>
-
+  
           {/* Description Input */}
           <div className="mb-6">
             <label
               htmlFor="description"
-              className="block text-neutralWhite mb-2 font-medium"
+              className="block text-white mb-2 font-medium"
             >
               Description
             </label>
@@ -228,17 +228,17 @@ const AddPost: React.FC = () => {
               placeholder="Enter post description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-4 py-3 border border-neutralWhite rounded-lg focus:outline-none focus:ring-2 focus:ring-maroonLight transition bg-charcoal text-neutralWhite"
+              className="w-full px-4 py-3 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E87722] transition bg-gray-900 text-white"
               rows={4}
             />
           </div>
-
+  
           {/* Tag Selection */}
           <div className="mb-6">
-            <h3 className="text-xl font-semibold mb-4 text-neutralWhite">Select Tags</h3>
+            <h3 className="text-xl font-semibold mb-4 text-white">Select Tags</h3>
             <div className="flex flex-wrap gap-2">
               {tags.map((tag) => (
-                <label key={tag} className="flex items-center text-neutralWhite">
+                <label key={tag} className="flex items-center text-white">
                   <input
                     type="checkbox"
                     checked={selectedTags.includes(tag)}
@@ -250,33 +250,33 @@ const AddPost: React.FC = () => {
               ))}
             </div>
           </div>
-
+  
           {/* Image Template Selection */}
           <div className="mb-6">
-            <h3 className="text-xl font-semibold mb-4 text-neutralWhite">
+            <h3 className="text-xl font-semibold mb-4 text-white">
               Select an Image Template
             </h3>
             <div className="flex space-x-4 overflow-x-auto">
-            {imageTemplates.map((template, index) => (
+              {imageTemplates.map((template, index) => (
                 <img
                   key={index}
                   src={template.src}
                   alt={template.alt}
                   className={`w-32 h-32 object-cover rounded-lg cursor-pointer border-4 ${
                     selectedTemplateIndex === index
-                      ? "border-maroon"
+                      ? "border-[#861F41]"
                       : "border-transparent"
-                  } hover:border-maroonLight`}
+                  } hover:border-[#E87722]`}
                   onClick={() => setSelectedTemplateIndex(index)}
                 />
               ))}
             </div>
           </div>
-
+  
           {/* Selected Template Preview and Text Inputs */}
           {selectedTemplateIndex !== null && (
             <div className="mb-6">
-              <h3 className="text-xl font-semibold mb-4 text-neutralWhite">
+              <h3 className="text-xl font-semibold mb-4 text-white">
                 Customize Your Template
               </h3>
               <div className="flex flex-col md:flex-row md:space-x-6">
@@ -311,7 +311,7 @@ const AddPost: React.FC = () => {
                     )}
                   </div>
                 </div>
-
+  
                 {/* Text Inputs */}
                 <div className="md:w-1/2">
                   {imageTemplates[selectedTemplateIndex].textAreas.map(
@@ -319,7 +319,7 @@ const AddPost: React.FC = () => {
                       <div key={area.key} className="mb-4">
                         <label
                           htmlFor={area.key}
-                          className="block text-neutralWhite mb-2 font-medium"
+                          className="block text-white mb-2 font-medium"
                         >
                           {area.placeholder}
                         </label>
@@ -331,11 +331,11 @@ const AddPost: React.FC = () => {
                           onChange={(e) =>
                             handleTextChange(area.key, e.target.value)
                           }
-                          className="w-full px-4 py-3 border border-neutralWhite rounded-lg focus:outline-none focus:ring-2 focus:ring-maroonLight transition bg-charcoal text-neutralWhite"
+                          className="w-full px-4 py-3 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E87722] transition bg-gray-900 text-white"
                         />
                         {/* Color Picker */}
                         <div className="mt-2 flex items-center">
-                          <label className="text-neutralWhite mr-2">
+                          <label className="text-white mr-2">
                             Text Color:
                           </label>
                           <input
@@ -344,7 +344,7 @@ const AddPost: React.FC = () => {
                             onChange={(e) =>
                               handleColorChange(area.key, e.target.value)
                             }
-                            className="w-10 h-10 p-1 border border-neutralWhite rounded-full cursor-pointer"
+                            className="w-10 h-10 p-1 border border-gray-600 rounded-full cursor-pointer"
                           />
                         </div>
                       </div>
@@ -354,15 +354,15 @@ const AddPost: React.FC = () => {
               </div>
             </div>
           )}
-
+  
           {/* Submit Button */}
           <button
             onClick={handleAddPost}
             disabled={loading}
-            className={`w-full py-3 text-neutralWhite font-semibold rounded-lg transition duration-200 ${
+            className={`w-full py-3 text-white font-semibold rounded-lg transition duration-200 ${
               loading
-                ? "bg-maroonLight cursor-not-allowed flex items-center justify-center"
-                : "bg-maroon hover:bg-maroonLight"
+                ? "bg-[#E87722] cursor-not-allowed flex items-center justify-center"
+                : "bg-[#861F41] hover:bg-[#E87722]"
             }`}
           >
             {loading ? (
@@ -373,12 +373,12 @@ const AddPost: React.FC = () => {
               "Create Post"
             )}
           </button>
-
+  
           {/* Success Button to Navigate to Post */}
           {createdPostId && (
             <button
               onClick={handleGoToPost}
-              className="mt-4 w-full py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200 flex items-center justify-center"
+              className="mt-4 w-full py-3 bg-green-700 text-white font-semibold rounded-lg hover:bg-green-800 transition duration-200 flex items-center justify-center"
             >
               View Your Post
             </button>
@@ -387,7 +387,6 @@ const AddPost: React.FC = () => {
       </div>
     </div>
   );
-};
-
+}
 export default AddPost;
 
