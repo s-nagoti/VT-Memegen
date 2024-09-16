@@ -1,5 +1,6 @@
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react-swc'
+import fs from 'fs'
 
 
 
@@ -16,5 +17,11 @@ export default defineConfig(({ mode }) => {
           // If you want to exposes all env variables, which is not recommended
           'process.env': env
       },
+      server: {
+        https: {
+          key: fs.readFileSync('key.pem'),
+          cert: fs.readFileSync('cert.pem')
+        }
+      }
   };
 });
