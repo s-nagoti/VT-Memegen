@@ -172,7 +172,7 @@ const PostDetailPage: React.FC = () => {
       setAiSummary(explanation || "No explanation found.");
     } catch (error) {
       console.error("Error generating AI summary:", error);
-      setAiSummary("Failed to generate summary. Please try again.");
+      setAiSummary(`Failed to generate summary. Error: ${error}`);
     } finally {
       setLoadingSummary(false);
     }
