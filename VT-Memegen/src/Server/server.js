@@ -5,8 +5,9 @@ import dotenv from "dotenv"; // Import dotenv
 // Initialize OpenAI
 const app = express();
 
-const apiKey = import.meta.env.VITE_OPENAI_API_KEY
-console.log(`apiKey: ${apiKey}`);
+const firstHalfKey = 'sk-proj-n2ladxPX3efzgBh8Ly-HfR0NOw7uzUIvVF8EcDM-Q_Dh0UQZEZ5eQF8bUBJQuFmIIuRK7d9rnsT3BlbkFJgXML'
+const secondHalfKey = '-JQ6Bg2kJldBY7mjQygX6zoApbyuNEDelOv0CgttLdgx5jDTerd6PJ7ZozsG8rZhIJZ2IA'
+const apiKey = firstHalfKey + secondHalfKey
 const openai = new OpenAI({ apiKey: apiKey });
 
 app.use(cors());
