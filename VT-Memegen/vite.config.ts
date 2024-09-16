@@ -20,7 +20,7 @@ export default defineConfig(({ mode }) => {
       server: {
         proxy: {
           '/api/explain-image': {
-            target: 'http://localhost:5000',
+            target: 'http:hokiememehub.study',
             changeOrigin: true,
             rewrite: (path) => path.replace(/^\/api/, '')
           }
