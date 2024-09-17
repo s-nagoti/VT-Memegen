@@ -128,6 +128,7 @@ const PostDetailPage: React.FC = () => {
       }
     }
   
+    trackPostViews()
 
   }, [post])
 
