@@ -119,7 +119,7 @@ const PostDetailPage: React.FC = () => {
       const postSnap = await getDoc(postRef)
       const postData = postSnap.data()
       if(postSnap.exists()){
-        if (!postData?.pageViews.includes(user?.id ?? "") ?? true){
+        if (!postData?.pageViews.includes(user?.id ?? "")){
           const batch = writeBatch(db)
 
           batch.update(postRef, {pageViews: arrayUnion(user?.id ?? "")})
