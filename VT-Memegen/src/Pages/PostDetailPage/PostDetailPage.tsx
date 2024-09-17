@@ -115,7 +115,7 @@ const PostDetailPage: React.FC = () => {
         throw new Error("Invalid post ID");
       }
   
-      const postRef = doc(db, 'posts', post?.id ?? "")
+      const postRef = doc(db, 'posts', postId)
       const postSnap = await getDoc(postRef)
       const postData = postSnap.data()
       if(postSnap.exists()){
