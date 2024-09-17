@@ -12,4 +12,5 @@ export interface Post {
     commentsCount: number,
     aiExplenation?: string,
     storageRef?: string,
+    pageViews?: string[],
 }

@@ -105,7 +105,31 @@ const PostDetailPage: React.FC = () => {
     };
 
     fetchPost();
+
   }, [postId]);
+
+  useEffect(() => {
+
+    const trackPostViews = async () => {
+      if (typeof postId !== "string" || postId.trim() === "") {
+        throw new Error("Invalid post ID");
+      }
+  
+      const postRef = doc(db, 'posts', post?.id ?? "")
+      const postSnap = await getDoc(postRef)
+      const postData = postSnap.data()
+      if(postSnap.exists()){
+        if (!postData?.pageViews.includes(user?.id ?? "") ?? true){
+          const batch = writeBatch(db)
+
+          batch.update(postRef, {pageViews: arrayUnion(user?.id ?? "")})
+          await batch.commit();
+        }
+      }
+    }
+  
+
+  }, [post])
 
   useEffect(() => {
     if (!postId) return;
@@ -424,6 +448,8 @@ const PostDetailPage: React.FC = () => {
               </div>
               {/* Upvote/Downvote Section */}
               <div className="flex items-center space-x-6">
+
+                <p className='flex items-center space-x-2 text-gray-400 hover:text-[#861F41] transition-colors duration-200 font-semibold'>{post.pageViews?.length ?? 0} views</p>
                 {/* Upvote Button */}
                 <button
                   onClick={handleUpvote}
