@@ -119,7 +119,7 @@ const PostDetailPage: React.FC = () => {
       const postSnap = await getDoc(postRef)
       const postData = postSnap.data()
       if(postSnap.exists()){
-        if (!postData?.pageViews.includes(user?.id ?? "")){
+        if (!postData?.pageViews?.includes(user?.id ?? "")){
           const batch = writeBatch(db)
 
           batch.update(postRef, {pageViews: arrayUnion(user?.id ?? "")})
@@ -209,7 +209,7 @@ const PostDetailPage: React.FC = () => {
       const finalImageUrl = await getDownloadURL(storageRef);
 
       const backendResponse = await axios.post(
-        "http://10.0.0.239:5000/api/explain-image",
+        "http://localhost:5000/api/explain-image",
         {
           imageUrl: finalImageUrl,
         }
